@@ -1,0 +1,417 @@
+/* ====================================================================
+   Andrea Alice — Fase 2 (design, moodboard applicata)
+   --------------------------------------------------------------------
+   Direzione moodboard: modernismo onirico / tramonto · palette calda
+   (crema + corallo/sunset, magenta, teal, verde, oro, charcoal) ·
+   layout modulare pulito · footer scuro strutturato · texture ASCII/codice ·
+   freccia angolata come motivo · tipografia Faricy New (sans pulito).
+
+   Tutta l'estetica vive qui in :root come custom properties.
+   ==================================================================== */
+
+:root {
+  /* ---- Palette moodboard ---- */
+  --color-cream:         #ECE5D7;   /* crema caldo — sfondo */
+  --color-surface:       #F3EEE2;   /* card / player (più chiara del bg) */
+  --color-surface-alt:   #E4DBC9;
+  --color-ink:           #1C1B19;   /* charcoal — testo e footer */
+
+  --color-coral:         #EE7E4F;   /* corallo / tramonto — accento primario */
+  --color-coral-deep:    #D9663A;   /* hover */
+  --color-magenta:       #8E2A62;   /* plum — accento secondario */
+  --color-teal:          #1E6B82;
+  --color-green:         #33A065;
+  --color-gold:          #CE9A22;
+
+  /* ---- Ruoli semantici (usati dal layout) ---- */
+  --color-bg:             var(--color-cream);
+  --color-text:           var(--color-ink);
+  --color-text-muted:     #625849;   /* grigio caldo, AA su crema */
+  --color-border:         #D6CCB8;
+  --color-accent:         var(--color-coral);
+  --color-accent-hover:   var(--color-coral-deep);
+  --color-accent-contrast:#1C1B19;   /* charcoal su corallo — contrasto AA */
+  --color-focus:          var(--color-teal);
+
+  /* ---- Gradiente hero: bagliore corallo (tramonto) in alto a destra,
+          sfuma nel crema dove sta il testo → charcoal resta leggibile ---- */
+  --gradient-hero:
+    radial-gradient(88% 120% at 88% 10%,
+      rgba(238,126,79,0.55) 0%,
+      rgba(243,199,155,0.42) 28%,
+      rgba(236,229,215,0)   62%),
+    var(--color-cream);
+
+  /* ---- Tipografia ---- */
+  /* Faricy New (commerciale, moretye) come primaria; fallback grotesque pulito.
+     Vedi lo scaffold @font-face più sotto per self-hostarla in ./fonts/. */
+  --font-display: "Faricy New", "Helvetica Neue", "Segoe UI", system-ui, Arial, sans-serif;
+  --font-body:    var(--font-display);
+  --font-mono:    ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --font-weight-normal: 400;
+  --font-weight-bold:   500;   /* Faricy è pulita: enfasi con Medium, non un grassetto pesante */
+
+  --fs-hero:  clamp(2.75rem, 9vw, 5.5rem);
+  --fs-h2:    clamp(1.6rem, 4vw, 2.4rem);
+  --fs-h3:    clamp(1.15rem, 3vw, 1.5rem);
+  --fs-body:  clamp(1rem, 2.2vw, 1.125rem);
+  --fs-small: 0.875rem;
+  --line-body: 1.6;
+  --measure:  62ch;
+
+  /* ---- Spaziature ---- */
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  2rem;
+  --space-xl:  4rem;
+  --space-2xl: 6rem;
+  --wrap-max:  72rem;
+  --wrap-pad:  1.25rem;
+
+  /* ---- Forma (layout modulare pulito) ---- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-pill: 999px;
+  --border-width: 1px;
+  --shadow-1: 0 1px 2px rgba(28, 27, 25, 0.05);
+
+  /* ---- Movimento ---- */
+  --transition-fast: 120ms ease;
+  --transition-med:  240ms ease;
+
+  /* ---- Layout / sticky nav ---- */
+  --header-h: 3.5rem;
+}
+
+/* ---- @font-face — Faricy New -------------------------------------------
+   DA ATTIVARE in Fase 2 una volta acquistata la licenza (moretye) e messi
+   i file in ./fonts/. Togli il commento e allinea nomi/pesi ai file reali.
+
+@font-face {
+  font-family: "Faricy New";
+  font-weight: 300;                 // Light
+  font-style: normal;
+  src: url("fonts/FaricyNew-Light.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Faricy New";
+  font-weight: 500;                 // Medium (enfasi/UI)
+  font-style: normal;
+  src: url("fonts/FaricyNew-Medium.woff2") format("woff2");
+  font-display: swap;
+}
+------------------------------------------------------------------------- */
+
+/* ============================ RESET LEGGERO ============================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--line-body);
+  font-weight: var(--font-weight-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, p, ul, pre { margin: 0; }
+ul { list-style: none; padding: 0; }
+a { color: inherit; text-decoration: none; }
+img, iframe { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; }
+
+/* l'attributo [hidden] deve sempre vincere sulle regole display delle classi */
+[hidden] { display: none !important; }
+
+:target { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
+
+/* Freccia angolata ↗ come motivo per i link in uscita (moodboard) */
+.social a::after,
+.release__fallback::after,
+.work__link::after {
+  content: " \2197";   /* ↗ */
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+/* ---- Accessibilità: focus visibile ---- */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Contenitore centrato ---- */
+.wrap {
+  width: 100%;
+  max-width: var(--wrap-max);
+  margin-inline: auto;
+  padding-inline: var(--wrap-pad);
+}
+
+/* ============================== HEADER / NAV ============================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--color-cream) 85%, transparent);
+  backdrop-filter: saturate(120%) blur(8px);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.nav {
+  max-width: var(--wrap-max);
+  margin-inline: auto;
+  min-height: var(--header-h);
+  padding-inline: var(--wrap-pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+.nav__brand {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.01em;
+}
+.nav__menu {
+  display: flex;
+  gap: var(--space-lg);
+  font-size: var(--fs-small);
+}
+.nav__menu a { color: var(--color-text-muted); transition: color var(--transition-fast); }
+.nav__menu a:hover { color: var(--color-accent); }
+
+.nav__toggle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: transparent;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+.nav__toggle-bar {
+  display: block;
+  width: 1.1rem;
+  height: 2px;
+  margin-inline: auto;
+  background: var(--color-text);
+}
+
+@media (max-width: 767px) {
+  .nav__menu {
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: var(--color-cream);
+    border-bottom: var(--border-width) solid var(--color-border);
+    display: none;
+  }
+  .nav.is-open .nav__menu { display: flex; }
+  .nav__menu li { border-top: var(--border-width) solid var(--color-border); }
+  .nav__menu a { display: block; padding: var(--space-md) var(--wrap-pad); }
+}
+@media (min-width: 768px) {
+  .nav__toggle { display: none; }
+}
+
+/* ================================= HERO ================================= */
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: min(76vh, 680px);
+  display: flex;
+  align-items: center;
+  background: var(--gradient-hero);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+/* Video Remotion (visual-tools/remotion-hero/): canale alpha, si compone
+   sopra il gradiente sunset senza sostituirlo. Assente finché non viene
+   renderizzato e copiato qui — l'hero regge già solo col gradiente CSS. */
+.hero__bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero__inner { position: relative; z-index: 1; padding-block: var(--space-2xl); }
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  font-weight: var(--font-weight-normal);   /* Faricy Light: titolo arioso */
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+.hero__tagline {
+  margin-top: var(--space-md);
+  color: var(--color-text-muted);
+  max-width: var(--measure);
+}
+
+/* Gatto ASCII: texture decorativa, come "sole" nel bagliore in alto a destra */
+.ascii-cat {
+  position: absolute;
+  z-index: 1;
+  top: 12%;
+  right: clamp(1rem, 6vw, 5rem);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 2.4vw, 1.6rem);
+  line-height: 1.15;
+  color: var(--color-magenta);
+  opacity: 0.22;
+  white-space: pre;
+  pointer-events: none;
+  user-select: none;
+}
+@media (max-width: 480px) { .ascii-cat { opacity: 0.16; } }
+
+/* =============================== SECTIONS =============================== */
+.section { padding-block: var(--space-2xl); border-bottom: var(--border-width) solid var(--color-border); }
+.section__head { margin-bottom: var(--space-lg); }
+.section__head--sub { margin-top: var(--space-2xl); }
+.section__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.01em;
+}
+.section__title--sub { font-size: var(--fs-h3); }
+.section__lead { margin-top: var(--space-sm); color: var(--color-text-muted); max-width: var(--measure); }
+
+/* ================================ PLAYER ================================ */
+.player {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-lg);
+  display: grid;
+  gap: var(--space-md);
+  max-width: 44rem;
+}
+.player__status { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--fs-small); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); }
+.player__dot {
+  width: 0.6rem; height: 0.6rem; border-radius: var(--radius-pill);
+  background: var(--color-border);
+  transition: background var(--transition-med);
+}
+.player.is-live .player__dot { background: var(--color-accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent); }
+.player.is-live .player__state { color: var(--color-accent); }
+.player__media:empty { display: none; }
+.player__media iframe,
+.player__media audio { width: 100%; }
+
+.player__controls { display: flex; align-items: center; gap: var(--space-md); flex-wrap: wrap; }
+.player__btn {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: var(--space-xs) var(--space-lg);
+  font-weight: var(--font-weight-bold);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.player__btn:hover { background: var(--color-accent-hover); }
+.player__btn:active { transform: translateY(1px); }
+
+.player__volume { display: inline-flex; align-items: center; gap: var(--space-xs); font-size: var(--fs-small); color: var(--color-text-muted); }
+.player__volume-input { accent-color: var(--color-accent); }
+.player__note { font-size: var(--fs-small); color: var(--color-text-muted); }
+
+/* ============================= RELEASE GRID ============================= */
+.release-grid {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 600px) {
+  .release-grid { grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); }
+}
+.release {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-sm);
+}
+.release__title { font-weight: var(--font-weight-bold); }
+.release__embed:empty { display: none; }
+.release__embed iframe { width: 100%; border: 0; }
+.release__actions { display: flex; gap: var(--space-md); align-items: center; font-size: var(--fs-small); }
+.release__load {
+  background: transparent;
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2xs) var(--space-md);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.release__load:hover { background: var(--color-ink); color: var(--color-cream); }
+.release__fallback { color: var(--color-text-muted); }
+.release__fallback:hover { color: var(--color-accent); }
+
+/* ============================= BIO / WORK ============================= */
+.prose { max-width: var(--measure); }
+.prose p + p { margin-top: var(--space-md); }
+
+.work-list { display: grid; gap: var(--space-md); }
+.work {
+  display: grid;
+  gap: var(--space-2xs);
+  padding-block: var(--space-md);
+  border-top: var(--border-width) solid var(--color-border);
+}
+.work__head { display: flex; gap: var(--space-md); align-items: baseline; flex-wrap: wrap; }
+.work__title { font-weight: var(--font-weight-bold); }
+.work__year { color: var(--color-text-muted); font-size: var(--fs-small); font-family: var(--font-mono); }
+.work__note { color: var(--color-text-muted); max-width: var(--measure); }
+.work__link { color: var(--color-accent); font-size: var(--fs-small); }
+
+/* ================================ FOOTER ================================ */
+/* Footer scuro strutturato (moodboard, riferimento Ableton) */
+.site-footer {
+  padding-block: var(--space-2xl);
+  background: var(--color-ink);
+  color: var(--color-cream);
+}
+.site-footer .section__title { color: var(--color-cream); }
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin-block: var(--space-lg);
+  font-size: var(--fs-small);
+}
+.social a { color: color-mix(in srgb, var(--color-cream) 72%, transparent); transition: color var(--transition-fast); }
+.social a:hover { color: var(--color-cream); }
+.footer__credit { color: color-mix(in srgb, var(--color-cream) 55%, transparent); font-size: var(--fs-small); font-family: var(--font-mono); }
+
+/* ========================= REDUCED MOTION ========================= */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  /* Video hero è decorativo (audio-reattivo, loop continuo): il gradiente
+     CSS sottostante basta da solo, niente da mostrare in sua vece. */
+  .hero__bg-video { display: none; }
+}

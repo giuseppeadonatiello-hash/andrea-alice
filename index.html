@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Andrea Alice</title>
+  <meta name="description" content="[META DESCRIPTION — da fornire] Andrea Alice — electronic pop introspettivo." />
+  <meta name="theme-color" content="#ECE5D7" />
+
+  <!-- ===================================================================
+       FASE 2 (design): moodboard applicata via variabili in styles.css.
+       DA FORNIRE ancora: file font Faricy New (in ./fonts/), asset logo
+       (vinile "ANDREA ALICE / ARTISON"), favicon, immagini Open Graph.
+       =================================================================== -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============================ HEADER / NAV ============================ -->
+  <header class="site-header" id="top">
+    <nav class="nav" aria-label="Navigazione principale">
+      <a class="nav__brand" href="#top">Andrea&nbsp;Alice</a>
+
+      <!-- Toggle mobile: mostrato solo sotto il breakpoint, gestito in script.js -->
+      <button
+        class="nav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-menu"
+        aria-label="Apri il menu di navigazione">
+        <span class="nav__toggle-bar" aria-hidden="true"></span>
+        <span class="nav__toggle-bar" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav__menu" id="nav-menu">
+        <li><a href="#radio">Radio</a></li>
+        <li><a href="#music">Music</a></li>
+        <li><a href="#bio">Bio/Work</a></li>
+        <li><a href="#contact">Contatti</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============================== HERO ============================== -->
+    <section class="hero" aria-labelledby="hero-title">
+      <!-- Visual audio-reattivo (Remotion, visual-tools/remotion-hero/): finché
+           out/hero-visual.webm non viene renderizzato e copiato qui, il video
+           non carica nulla e resta visibile solo il gradiente CSS sottostante. -->
+      <video class="hero__bg-video" aria-hidden="true" autoplay muted loop playsinline>
+        <source src="hero-visual.webm" type="video/webm" />
+      </video>
+      <!-- Texture decorativa: gatto ASCII (moodboard). Solo estetica → aria-hidden -->
+      <pre class="ascii-cat" aria-hidden="true">   /\_/\
+  ( o.o )
+   > ^ <</pre>
+      <div class="wrap hero__inner">
+        <h1 class="hero__title" id="hero-title">Andrea Alice</h1>
+        <p class="hero__tagline">[TAGLINE — da fornire]</p>
+      </div>
+    </section>
+
+    <!-- ============================== RADIO ============================== -->
+    <!-- Elemento centrale del sito. Sorgente configurata in script.js → RADIO_CONFIG -->
+    <section class="section radio" id="radio" aria-labelledby="radio-title">
+      <div class="wrap">
+        <header class="section__head">
+          <h2 class="section__title" id="radio-title">Radio</h2>
+          <p class="section__lead">[DESCRIZIONE RADIO — da fornire] Stream ambient continuo.</p>
+        </header>
+
+        <div class="player" data-player>
+          <!-- Stato "on air" -->
+          <div class="player__status">
+            <span class="player__dot" data-player-dot aria-hidden="true"></span>
+            <span class="player__state" data-player-state>OFFLINE</span>
+          </div>
+
+          <!-- La sorgente reale (iframe YouTube o <audio>) viene iniettata qui
+               da script.js SOLO all'interazione (on-interaction) per non
+               appesantire il first paint. -->
+          <div class="player__media" data-player-media></div>
+
+          <!-- Controlli custom, stilizzabili in Fase 2 via variabili CSS -->
+          <div class="player__controls">
+            <button
+              class="player__btn player__btn--play"
+              type="button"
+              data-player-play
+              aria-label="Avvia la radio">
+              <span data-player-play-label>Play</span>
+            </button>
+
+            <!-- Volume: usato solo in modalità (B) audio; nascosto in modalità YouTube -->
+            <label class="player__volume" data-player-volume-wrap hidden>
+              <span class="player__volume-icon" aria-hidden="true">Vol</span>
+              <input
+                class="player__volume-input"
+                type="range"
+                min="0" max="100" value="80"
+                data-player-volume
+                aria-label="Volume" />
+            </label>
+          </div>
+
+          <p class="player__note">[NOTA RADIO opzionale — da fornire]</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== MUSIC ============================== -->
+    <!-- Griglia di embed Bandcamp. Release configurate in script.js → BANDCAMP_CONFIG -->
+    <section class="section music" id="music" aria-labelledby="music-title">
+      <div class="wrap">
+        <header class="section__head">
+          <h2 class="section__title" id="music-title">Music</h2>
+          <p class="section__lead">[DESCRIZIONE MUSIC — da fornire]</p>
+        </header>
+
+        <!-- I contenitori delle release vengono generati qui da script.js.
+             Ogni card carica l'iframe Bandcamp on-interaction (click "Ascolta"). -->
+        <ul class="release-grid" data-releases></ul>
+      </div>
+    </section>
+
+    <!-- ============================ BIO / WORK ============================ -->
+    <section class="section bio" id="bio" aria-labelledby="bio-title">
+      <div class="wrap">
+        <header class="section__head">
+          <h2 class="section__title" id="bio-title">Bio</h2>
+        </header>
+
+        <div class="prose">
+          <p>[BIO — da fornire] Testo biografico breve, misura di riga contenuta per leggibilità.</p>
+        </div>
+
+        <header class="section__head section__head--sub">
+          <h3 class="section__title section__title--sub" id="work-title">Work</h3>
+        </header>
+
+        <!-- Elenco lavori/collaborazioni: generato da script.js → WORK_ITEMS -->
+        <ul class="work-list" data-work aria-labelledby="work-title"></ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="site-footer" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <h2 class="section__title" id="contact-title">Contatti</h2>
+
+      <!-- Lista social generata da script.js → SOCIAL_LINKS -->
+      <ul class="social" data-social></ul>
+
+      <p class="footer__credit">
+        <span data-year>2026</span> · Andrea Alice · [CREDITO — da fornire]
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
