@@ -57,13 +57,13 @@ const BANDCAMP_CONFIG = {
   },
   releases: [
     {
-      title: '[TITOLO RELEASE 1]',
+      title: '[RELEASE TITLE 1]',
       type: 'album',                 // 'album' | 'track'
       id: 'BANDCAMP_ALBUM_ID',       // SOSTITUIRE
       bandcampUrl: 'https://ANDREAALICE.bandcamp.com/album/SLUG', // SOSTITUIRE
     },
     {
-      title: '[TITOLO RELEASE 2]',
+      title: '[RELEASE TITLE 2]',
       type: 'track',
       id: 'BANDCAMP_TRACK_ID',       // SOSTITUIRE
       bandcampUrl: 'https://ANDREAALICE.bandcamp.com/track/SLUG', // SOSTITUIRE
@@ -75,8 +75,19 @@ const BANDCAMP_CONFIG = {
    3) WORK — lavori / progetti / collaborazioni
    ==================================================================== */
 const WORK_ITEMS = [
-  { title: '[TITOLO LAVORO]', year: '[ANNO]', note: '[NOTA BREVE — da fornire]', url: '' },
-  { title: '[TITOLO LAVORO]', year: '[ANNO]', note: '[NOTA BREVE — da fornire]', url: '' },
+  { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk' },
+  { title: 'SENIOR EL GATO', year: '2023', note: 'EP', url: 'https://open.spotify.com/album/3SmYjEoKjUyYyL1lmYU7C1' },
+  { title: 'APRILE PER SEMPRE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/4kbbns7EIJ5wbDZmmul6QB' },
+  { title: 'FUORI STRADA ANDARE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/3KZA4DlEtiRvmrY87JSsxT' },
+  { title: 'TUTTOBIANCO / CATTIVA BUGIARDA', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/32Mp31839n5EqKVjTPN0M2' },
+  { title: 'SOGNOSOGNOSOGNO EP', year: '2022', note: 'EP', url: 'https://open.spotify.com/album/5oWAGhvlG14lvEKqU1hKpG' },
+  { title: 'SOGNOSOGNOSOGNO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/4matYKQGXRJrkZCBiT3wtg' },
+  { title: 'OLTRE IL BUIO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/3PilquX2naxALyjuigAnci' },
+  { title: 'Voodoo (feat. Andrea Alice)', year: '', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8' },
+  { title: 'Peroni Dischi — Full Compilation', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4wei7Cl5luDm1Q12xyB1Zd' },
+  { title: 'Peroni Dischi Vol. 2', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/3OcQfdJbTeoQ4fG5nFDChs' },
+  { title: 'Nuova Memoria Vol. 1', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW' },
+  { title: 'NVAMR002', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4PERTjMot9SpukCwKNBIsT' },
 ];
 
 /* ====================================================================
@@ -84,10 +95,11 @@ const WORK_ITEMS = [
    ==================================================================== */
 const SOCIAL_LINKS = [
   { label: 'Bandcamp',  url: 'https://ANDREAALICE.bandcamp.com' },
-  { label: 'Spotify',   url: 'https://open.spotify.com/artist/ID' },
-  { label: 'YouTube',   url: 'https://youtube.com/@HANDLE' },
-  { label: 'Instagram', url: 'https://instagram.com/HANDLE' },
-  { label: 'Email',     url: 'mailto:INDIRIZZO@EMAIL' },
+  { label: 'Spotify',   url: 'https://open.spotify.com/artist/6h2Jo8yyi50civQ54IciRP' },
+  { label: 'YouTube — Andrea Alice', url: 'https://youtube.com/channel/UCuNsu0rOt52K-yzCKN9g3PQ' },
+  { label: 'YouTube — Policrom',     url: 'https://youtube.com/@policrom_4192' },
+  { label: 'Instagram', url: 'https://instagram.com/andrea__alice' },
+  { label: 'Email',     url: 'mailto:textme.andreaalice@gmail.com' },
 ];
 
 /* ====================================================================
@@ -119,7 +131,7 @@ function initNavToggle() {
   const setOpen = (open) => {
     nav.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Chiudi il menu di navigazione' : 'Apri il menu di navigazione');
+    toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
   };
 
   toggle.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
@@ -179,7 +191,7 @@ function initRadio() {
       if (!loaded) {
         const iframe = document.createElement('iframe');
         iframe.src = buildYouTubeSrc(RADIO_CONFIG.youtube);
-        iframe.title = 'Radio Andrea Alice';
+        iframe.title = 'Music for Thinking — Andrea Alice';
         iframe.loading = 'lazy';
         iframe.allow = 'autoplay; encrypted-media';
         iframe.setAttribute('allowfullscreen', '');
@@ -189,8 +201,8 @@ function initRadio() {
         media.appendChild(iframe);
         loaded = true;
         setLive(true);
-        playLbl.textContent = 'In riproduzione';
-        playBtn.setAttribute('aria-label', 'Radio in riproduzione');
+        playLbl.textContent = 'Now playing';
+        playBtn.setAttribute('aria-label', 'Stream playing');
         // Nota: per policy autoplay, con autoplayMuted il player parte muto.
         // L'utente alza l'audio dai controlli nativi YouTube nell'iframe.
       }
@@ -237,8 +249,8 @@ function initReleases() {
     const loadBtn = document.createElement('button');
     loadBtn.className = 'release__load';
     loadBtn.type = 'button';
-    loadBtn.textContent = 'Ascolta';
-    loadBtn.setAttribute('aria-label', `Carica il player di ${rel.title}`);
+    loadBtn.textContent = 'Listen';
+    loadBtn.setAttribute('aria-label', `Load player for ${rel.title}`);
     loadBtn.addEventListener('click', () => {
       embed.appendChild(buildBandcampIframe(rel));
       loadBtn.remove();
@@ -250,7 +262,7 @@ function initReleases() {
     fallback.href = rel.bandcampUrl;
     fallback.target = '_blank';
     fallback.rel = 'noopener';
-    fallback.textContent = 'Apri su Bandcamp';
+    fallback.textContent = 'Open on Bandcamp';
 
     actions.append(loadBtn, fallback);
     li.append(title, embed, actions);
@@ -320,7 +332,7 @@ function initWork() {
       link.href = item.url;
       link.target = '_blank';
       link.rel = 'noopener';
-      link.textContent = 'Apri';
+      link.textContent = 'Open';
       li.appendChild(link);
     }
 
