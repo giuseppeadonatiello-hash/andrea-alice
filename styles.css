@@ -255,11 +255,56 @@ button { font: inherit; cursor: pointer; }
   font-weight: var(--font-weight-normal);   /* Faricy Light: titolo arioso */
   line-height: 1.0;
   letter-spacing: -0.02em;
+  opacity: 0;
+  animation: hero-reveal 700ms ease-out 80ms forwards;
 }
 .hero__tagline {
   margin-top: var(--space-md);
   color: var(--color-text-muted);
   max-width: var(--measure);
+  opacity: 0;
+  animation: hero-reveal 700ms ease-out 220ms forwards;
+}
+@keyframes hero-reveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulviscolo CSS: movimento leggero nell'hero finché il video Remotion non
+   è renderizzato — stessa palette/logica del tool (corallo/oro/magenta,
+   deriva lenta, loop). Zero dipendenze, coerente col resto del sito. */
+.hero__motes { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.hero__mote {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(1px);
+  animation-name: hero-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.hero__mote--1 {
+  top: 18%; right: 24%; width: 10px; height: 10px;
+  background: radial-gradient(circle, var(--color-coral) 0%, transparent 72%);
+  opacity: 0.5;
+  animation-duration: 19s;
+}
+.hero__mote--2 {
+  top: 36%; right: 13%; width: 7px; height: 7px;
+  background: radial-gradient(circle, var(--color-gold) 0%, transparent 72%);
+  opacity: 0.45;
+  animation-duration: 24s;
+  animation-delay: -6s;
+}
+.hero__mote--3 {
+  top: 9%; right: 36%; width: 6px; height: 6px;
+  background: radial-gradient(circle, var(--color-magenta) 0%, transparent 72%);
+  opacity: 0.4;
+  animation-duration: 27s;
+  animation-delay: -12s;
+}
+@keyframes hero-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-14px, 18px); }
 }
 
 /* Gatto ASCII: texture decorativa, come "sole" nel bagliore in alto a destra */
@@ -414,4 +459,6 @@ button { font: inherit; cursor: pointer; }
   /* Video hero è decorativo (audio-reattivo, loop continuo): il gradiente
      CSS sottostante basta da solo, niente da mostrare in sua vece. */
   .hero__bg-video { display: none; }
+  .hero__mote { animation: none; }
+  .hero__title, .hero__tagline { animation: none; opacity: 1; transform: none; }
 }
