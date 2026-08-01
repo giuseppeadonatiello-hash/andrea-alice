@@ -132,12 +132,15 @@ button { font: inherit; cursor: pointer; }
 
 /* Freccia angolata ↗ come motivo per i link in uscita (moodboard) */
 .social a::after,
-.release__fallback::after,
-.work__link::after {
+.release__fallback::after {
   content: " \2197";   /* ↗ */
   font-style: normal;
   color: var(--color-accent);
 }
+
+/* Link di rientro (pagine release, Bio) — nessuna freccia, è navigazione interna */
+.back-link { display: inline-block; margin-bottom: var(--space-sm); color: var(--color-text-muted); font-size: var(--fs-small); }
+.back-link:hover { color: var(--color-accent); }
 
 /* ---- Accessibilità: focus visibile ---- */
 :focus-visible {
@@ -397,37 +400,16 @@ button { font: inherit; cursor: pointer; }
   gap: var(--space-sm);
 }
 .release__title { font-weight: var(--font-weight-bold); }
-.release__embed:empty { display: none; }
-.release__embed iframe { width: 100%; border: 0; }
+.release__meta { color: var(--color-text-muted); font-size: var(--fs-small); font-family: var(--font-mono); }
 .release__actions { display: flex; gap: var(--space-md); align-items: center; font-size: var(--fs-small); }
-.release__load {
-  background: transparent;
-  color: var(--color-text);
-  border: var(--border-width) solid var(--color-ink);
-  border-radius: var(--radius-pill);
-  padding: var(--space-2xs) var(--space-md);
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-.release__load:hover { background: var(--color-ink); color: var(--color-cream); }
 .release__fallback { color: var(--color-text-muted); }
 .release__fallback:hover { color: var(--color-accent); }
+.release__more { color: var(--color-accent); }
+.release__more:hover { color: var(--color-accent-hover); }
 
-/* ============================= BIO / WORK ============================= */
+/* ================================ PROSE ================================ */
 .prose { max-width: var(--measure); }
 .prose p + p { margin-top: var(--space-md); }
-
-.work-list { display: grid; gap: var(--space-md); }
-.work {
-  display: grid;
-  gap: var(--space-2xs);
-  padding-block: var(--space-md);
-  border-top: var(--border-width) solid var(--color-border);
-}
-.work__head { display: flex; gap: var(--space-md); align-items: baseline; flex-wrap: wrap; }
-.work__title { font-weight: var(--font-weight-bold); }
-.work__year { color: var(--color-text-muted); font-size: var(--fs-small); font-family: var(--font-mono); }
-.work__note { color: var(--color-text-muted); max-width: var(--measure); }
-.work__link { color: var(--color-accent); font-size: var(--fs-small); }
 
 /* ================================ FOOTER ================================ */
 /* Footer scuro strutturato (moodboard, riferimento Ableton) */

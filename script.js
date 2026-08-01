@@ -10,7 +10,7 @@
 'use strict';
 
 /* ====================================================================
-   1) RADIO — configurazione sorgente
+   1) RADIO (Music for Thinking) — configurazione sorgente
    --------------------------------------------------------------------
    mode: 'youtube'  → embed iframe YouTube (live o loop). Default.
    mode: 'audio'    → stream diretto Icecast/Shoutcast/URL via <audio>.
@@ -37,61 +37,32 @@ const RADIO_CONFIG = {
 };
 
 /* ====================================================================
-   2) BANDCAMP — release
+   2) RELEASES — discografia (sezione Music)
    --------------------------------------------------------------------
-   Una voce per release. `embed` sono i parametri dell'iframe ufficiale
-   Bandcamp (dal pulsante "Share / Embed" della pagina release).
-   type: 'album' | 'track'. `id` è album=... o track=... dell'embed.
-   `bandcampUrl` è il fallback testuale se l'iframe non carica.
+   Una voce per release. `url` è il link di ascolto (oggi Spotify, in
+   futuro eventualmente Bandcamp). `slug` è il nome file della pagina di
+   dettaglio in releases/<slug>.html (making of, foto, strumentazione).
+   Per aggiungere una release: aggiungere qui una voce e creare
+   releases/<slug>.html (vedi le pagine esistenti come modello).
    ==================================================================== */
-const BANDCAMP_CONFIG = {
-  // Parametri estetici comuni dell'embed (ritoccabili in Fase 2).
-  // NB: bgcol/linkcol sono placeholder; l'allineamento alla moodboard è Fase 2.
-  embedDefaults: {
-    size: 'large',       // 'large' | 'small'
-    bgcol: 'ffffff',
-    linkcol: '333333',
-    artwork: 'small',    // 'small' | 'big' | 'none'
-    tracklist: true,
-    height: 340,         // px (per size:large con artwork)
-  },
-  releases: [
-    {
-      title: '[RELEASE TITLE 1]',
-      type: 'album',                 // 'album' | 'track'
-      id: 'BANDCAMP_ALBUM_ID',       // SOSTITUIRE
-      bandcampUrl: 'https://ANDREAALICE.bandcamp.com/album/SLUG', // SOSTITUIRE
-    },
-    {
-      title: '[RELEASE TITLE 2]',
-      type: 'track',
-      id: 'BANDCAMP_TRACK_ID',       // SOSTITUIRE
-      bandcampUrl: 'https://ANDREAALICE.bandcamp.com/track/SLUG', // SOSTITUIRE
-    },
-  ],
-};
-
-/* ====================================================================
-   3) WORK — lavori / progetti / collaborazioni
-   ==================================================================== */
-const WORK_ITEMS = [
-  { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk' },
-  { title: 'SENIOR EL GATO', year: '2023', note: 'EP', url: 'https://open.spotify.com/album/3SmYjEoKjUyYyL1lmYU7C1' },
-  { title: 'APRILE PER SEMPRE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/4kbbns7EIJ5wbDZmmul6QB' },
-  { title: 'FUORI STRADA ANDARE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/3KZA4DlEtiRvmrY87JSsxT' },
-  { title: 'TUTTOBIANCO / CATTIVA BUGIARDA', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/32Mp31839n5EqKVjTPN0M2' },
-  { title: 'SOGNOSOGNOSOGNO EP', year: '2022', note: 'EP', url: 'https://open.spotify.com/album/5oWAGhvlG14lvEKqU1hKpG' },
-  { title: 'SOGNOSOGNOSOGNO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/4matYKQGXRJrkZCBiT3wtg' },
-  { title: 'OLTRE IL BUIO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/3PilquX2naxALyjuigAnci' },
-  { title: 'Voodoo (feat. Andrea Alice)', year: '', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8' },
-  { title: 'Peroni Dischi — Full Compilation', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4wei7Cl5luDm1Q12xyB1Zd' },
-  { title: 'Peroni Dischi Vol. 2', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/3OcQfdJbTeoQ4fG5nFDChs' },
-  { title: 'Nuova Memoria Vol. 1', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW' },
-  { title: 'NVAMR002', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4PERTjMot9SpukCwKNBIsT' },
+const RELEASES = [
+  { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk', slug: 'artisan' },
+  { title: 'SENIOR EL GATO', year: '2023', note: 'EP', url: 'https://open.spotify.com/album/3SmYjEoKjUyYyL1lmYU7C1', slug: 'senior-el-gato' },
+  { title: 'APRILE PER SEMPRE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/4kbbns7EIJ5wbDZmmul6QB', slug: 'aprile-per-sempre' },
+  { title: 'FUORI STRADA ANDARE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/3KZA4DlEtiRvmrY87JSsxT', slug: 'fuori-strada-andare' },
+  { title: 'TUTTOBIANCO / CATTIVA BUGIARDA', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/32Mp31839n5EqKVjTPN0M2', slug: 'tuttobianco-cattiva-bugiarda' },
+  { title: 'SOGNOSOGNOSOGNO EP', year: '2022', note: 'EP', url: 'https://open.spotify.com/album/5oWAGhvlG14lvEKqU1hKpG', slug: 'sognosognosogno-ep' },
+  { title: 'SOGNOSOGNOSOGNO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/4matYKQGXRJrkZCBiT3wtg', slug: 'sognosognosogno' },
+  { title: 'OLTRE IL BUIO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/3PilquX2naxALyjuigAnci', slug: 'oltre-il-buio' },
+  { title: 'Voodoo (feat. Andrea Alice)', year: '', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8', slug: 'voodoo' },
+  { title: 'Peroni Dischi — Full Compilation', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4wei7Cl5luDm1Q12xyB1Zd', slug: 'peroni-dischi-full-compilation' },
+  { title: 'Peroni Dischi Vol. 2', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/3OcQfdJbTeoQ4fG5nFDChs', slug: 'peroni-dischi-vol-2' },
+  { title: 'Nuova Memoria Vol. 1', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW', slug: 'nuova-memoria-vol-1' },
+  { title: 'NVAMR002', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4PERTjMot9SpukCwKNBIsT', slug: 'nvamr002' },
 ];
 
 /* ====================================================================
-   4) SOCIAL / CONTATTI
+   3) SOCIAL / CONTATTI
    ==================================================================== */
 const SOCIAL_LINKS = [
   { label: 'Bandcamp',  url: 'https://ANDREAALICE.bandcamp.com' },
@@ -110,8 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initYear();
   initNavToggle();
   initRadio();
-  initReleases();
-  initWork();
+  initMusic();
   initSocial();
 });
 
@@ -139,7 +109,7 @@ function initNavToggle() {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 }
 
-/* ==================== RADIO ==================== */
+/* ==================== RADIO (Music for Thinking) ==================== */
 function initRadio() {
   const root = document.querySelector('[data-player]');
   if (!root) return;
@@ -226,12 +196,12 @@ function buildYouTubeSrc(cfg) {
   return `https://www.youtube-nocookie.com/embed/?${p.toString()}`;
 }
 
-/* ==================== BANDCAMP ==================== */
-function initReleases() {
+/* ==================== MUSIC (discografia) ==================== */
+function initMusic() {
   const list = document.querySelector('[data-releases]');
   if (!list) return;
 
-  BANDCAMP_CONFIG.releases.forEach((rel) => {
+  RELEASES.forEach((rel) => {
     const li = document.createElement('li');
     li.className = 'release';
 
@@ -239,103 +209,27 @@ function initReleases() {
     title.className = 'release__title';
     title.textContent = rel.title;
 
-    const embed = document.createElement('div');
-    embed.className = 'release__embed';
+    const meta = document.createElement('p');
+    meta.className = 'release__meta';
+    meta.textContent = [rel.year, rel.note].filter(Boolean).join(' · ');
 
     const actions = document.createElement('div');
     actions.className = 'release__actions';
 
-    // Caricamento on-interaction dell'iframe Bandcamp
-    const loadBtn = document.createElement('button');
-    loadBtn.className = 'release__load';
-    loadBtn.type = 'button';
-    loadBtn.textContent = 'Listen';
-    loadBtn.setAttribute('aria-label', `Load player for ${rel.title}`);
-    loadBtn.addEventListener('click', () => {
-      embed.appendChild(buildBandcampIframe(rel));
-      loadBtn.remove();
-    }, { once: true });
+    const listen = document.createElement('a');
+    listen.className = 'release__fallback';
+    listen.href = rel.url;
+    listen.target = '_blank';
+    listen.rel = 'noopener';
+    listen.textContent = 'Listen';
 
-    // Fallback testuale se l'iframe non carica / JS off
-    const fallback = document.createElement('a');
-    fallback.className = 'release__fallback';
-    fallback.href = rel.bandcampUrl;
-    fallback.target = '_blank';
-    fallback.rel = 'noopener';
-    fallback.textContent = 'Open on Bandcamp';
+    const more = document.createElement('a');
+    more.className = 'release__more';
+    more.href = `releases/${rel.slug}.html`;
+    more.textContent = 'More info';
 
-    actions.append(loadBtn, fallback);
-    li.append(title, embed, actions);
-    list.appendChild(li);
-  });
-}
-
-function buildBandcampIframe(rel) {
-  const d = BANDCAMP_CONFIG.embedDefaults;
-  // Formato URL dell'embed ufficiale Bandcamp.
-  const parts = [
-    `${rel.type}=${encodeURIComponent(rel.id)}`,
-    `size=${d.size}`,
-    `bgcol=${d.bgcol}`,
-    `linkcol=${d.linkcol}`,
-    `artwork=${d.artwork}`,
-    d.tracklist ? 'tracklist=true' : 'tracklist=false',
-    'transparent=true',
-  ];
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://bandcamp.com/EmbeddedPlayer/${parts.join('/')}/`;
-  iframe.title = `Bandcamp — ${rel.title}`;
-  iframe.loading = 'lazy';
-  iframe.setAttribute('seamless', '');
-  iframe.style.border = '0';
-  iframe.style.width = '100%';
-  iframe.style.height = `${d.height}px`;
-  return iframe;
-}
-
-/* ==================== WORK ==================== */
-function initWork() {
-  const list = document.querySelector('[data-work]');
-  if (!list) return;
-
-  WORK_ITEMS.forEach((item) => {
-    const li = document.createElement('li');
-    li.className = 'work';
-
-    const head = document.createElement('div');
-    head.className = 'work__head';
-
-    const title = document.createElement('span');
-    title.className = 'work__title';
-    title.textContent = item.title;
-    head.appendChild(title);
-
-    if (item.year) {
-      const year = document.createElement('span');
-      year.className = 'work__year';
-      year.textContent = item.year;
-      head.appendChild(year);
-    }
-
-    li.appendChild(head);
-
-    if (item.note) {
-      const note = document.createElement('p');
-      note.className = 'work__note';
-      note.textContent = item.note;
-      li.appendChild(note);
-    }
-
-    if (item.url) {
-      const link = document.createElement('a');
-      link.className = 'work__link';
-      link.href = item.url;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = 'Open';
-      li.appendChild(link);
-    }
-
+    actions.append(listen, more);
+    li.append(title, meta, actions);
     list.appendChild(li);
   });
 }

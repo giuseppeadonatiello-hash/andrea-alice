@@ -35,7 +35,7 @@
       <ul class="nav__menu" id="nav-menu">
         <li><a href="#radio">Music for Thinking</a></li>
         <li><a href="#music">Music</a></li>
-        <li><a href="#bio">Bio/Work</a></li>
+        <li><a href="bio.html">Bio</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -116,7 +116,9 @@
     </section>
 
     <!-- ============================== MUSIC ============================== -->
-    <!-- Griglia di embed Bandcamp. Release configurate in script.js → BANDCAMP_CONFIG -->
+    <!-- Discografia completa. Release configurate in script.js → RELEASES.
+         Ogni card linka l'ascolto (oggi Spotify) e la pagina di dettaglio
+         in releases/<slug>.html (making of, foto, strumentazione). -->
     <section class="section music" id="music" aria-labelledby="music-title">
       <div class="wrap">
         <header class="section__head">
@@ -124,29 +126,7 @@
           <p class="section__lead">[MUSIC DESCRIPTION — to be provided]</p>
         </header>
 
-        <!-- I contenitori delle release vengono generati qui da script.js.
-             Ogni card carica l'iframe Bandcamp on-interaction (click "Ascolta"). -->
         <ul class="release-grid" data-releases></ul>
-      </div>
-    </section>
-
-    <!-- ============================ BIO / WORK ============================ -->
-    <section class="section bio" id="bio" aria-labelledby="bio-title">
-      <div class="wrap">
-        <header class="section__head">
-          <h2 class="section__title" id="bio-title">Bio</h2>
-        </header>
-
-        <div class="prose">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-        </div>
-
-        <header class="section__head section__head--sub">
-          <h3 class="section__title section__title--sub" id="work-title">Work</h3>
-        </header>
-
-        <!-- Elenco lavori/collaborazioni: generato da script.js → WORK_ITEMS -->
-        <ul class="work-list" data-work aria-labelledby="work-title"></ul>
       </div>
     </section>
 
