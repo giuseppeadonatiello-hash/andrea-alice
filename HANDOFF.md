@@ -1,6 +1,6 @@
 # Handoff — Sito Andrea Alice
 
-> Stato al 2026-08-07 (commit **v6**). Unico handoff valido per il progetto.
+> Stato al 2026-08-07 (commit **v7**). Unico handoff valido per il progetto.
 
 ## Percorso canonico
 
@@ -24,7 +24,10 @@ Pages / Vercel).
   `#music` (discografia), footer/`#contact`.
 - `bio.html` — pagina statica separata (oggi Lorem ipsum).
 - `releases/*.html` — 9 pagine di dettaglio, una per release (copertina Spotify,
-  pulsante *Listen on Spotify*, blocchi *Making of* / *Gear* placeholder).
+  pulsante *Listen on Spotify*, blocchi *Making of* / *Gear* placeholder, e
+  sezione *Photos* dove ci sono foto — vedi "Galleria foto" più sotto).
+- `releases/media/<slug>/` — foto per release: full in `media/<slug>/`,
+  miniature in `media/<slug>/thumb/`. Presente solo per le release con foto.
 - `styles.css` — tutta l'estetica in `:root` come custom properties (palette
   sunset: crema, corallo, magenta, teal, verde, oro, charcoal).
 - `script.js` — blocchi CONFIG in testa + logica. Iframe di terze parti caricati
@@ -71,6 +74,35 @@ Variante A (scelta): griglia di **copertine** (2 col mobile → 3 → 4 desktop)
 lift al hover; l'intera card linka la pagina di dettaglio, dove sta il pulsante
 *Listen on Spotify*. Classi: `.release-grid`, `.release__card`,
 `.release__cover`, `.release__title`, `.release__meta`.
+
+## Galleria foto (pagine release)
+
+Ogni pagina release può avere una sezione **Photos**: griglia di miniature
+(2 col mobile → 3 → 4 desktop) che aprono una **lightbox** a tutto schermo con
+navigazione prev/next e tastiera (←/→/Esc). Meccanismo già pronto in
+`styles.css` (`.gallery`, `.gallery__thumb`, `.lightbox`) e `script.js`
+(`initGallery()`); progressive enhancement — senza JS ogni miniatura resta un
+link diretto al file.
+
+**Per aggiungere foto a una release:**
+1. Ottimizzare le foto in due misure con `sips` (built-in macOS): full ~1600px
+   in `releases/media/<slug>/NN.jpg`, miniatura ~600px in
+   `releases/media/<slug>/thumb/NN.jpg`.
+2. Aggiungere in `releases/<slug>.html`, dentro `.release-detail`, il blocco:
+
+```html
+<section class="release-block">
+  <h2 class="section__title section__title--sub">Photos</h2>
+  <ul class="gallery" data-gallery>
+    <li><a class="gallery__item" href="media/<slug>/01.jpg">
+      <img class="gallery__thumb" src="media/<slug>/thumb/01.jpg"
+           alt="…" loading="lazy" width="600" height="600" /></a></li>
+    <!-- una <li> per foto -->
+  </ul>
+</section>
+```
+
+`href` = full, `src` = thumb. L'ordine nel DOM è l'ordine in lightbox.
 
 ## Da fornire (placeholder attuali)
 

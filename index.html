@@ -33,8 +33,8 @@
       </button>
 
       <ul class="nav__menu" id="nav-menu">
-        <li><a href="#radio">Music for Thinking</a></li>
         <li><a href="#music">Music</a></li>
+        <li><a href="#radio">Music for Thinking</a></li>
         <li><a href="bio.html">Bio</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -67,13 +67,28 @@
       </div>
     </section>
 
+    <!-- ============================== MUSIC ============================== -->
+    <!-- Discografia completa. Release configurate in script.js → RELEASES.
+         Ogni card linka l'ascolto (oggi Spotify) e la pagina di dettaglio
+         in releases/<slug>.html (making of, foto, strumentazione). -->
+    <section class="section music" id="music" aria-labelledby="music-title">
+      <div class="wrap">
+        <header class="section__head">
+          <h2 class="section__title" id="music-title">Music</h2>
+          <p class="section__lead">[MUSIC DESCRIPTION — to be provided]</p>
+        </header>
+
+        <ul class="release-grid" data-releases></ul>
+      </div>
+    </section>
+
     <!-- ============================== RADIO ============================== -->
     <!-- Elemento centrale del sito. Sorgente configurata in script.js → RADIO_CONFIG -->
     <section class="section radio" id="radio" aria-labelledby="radio-title">
       <div class="wrap">
         <header class="section__head">
           <h2 class="section__title" id="radio-title">Music for Thinking</h2>
-          <p class="section__lead">Low-arousal generative music, designed according to principles of music psychology — to accompany study, rest, reverie.</p>
+          <p class="section__lead">Music kept to the edge of attention — an ambience for study, rest, and reverie.</p>
         </header>
 
         <div class="player" data-player>
@@ -112,21 +127,6 @@
 
           <p class="player__note">Source coming soon.</p>
         </div>
-      </div>
-    </section>
-
-    <!-- ============================== MUSIC ============================== -->
-    <!-- Discografia completa. Release configurate in script.js → RELEASES.
-         Ogni card linka l'ascolto (oggi Spotify) e la pagina di dettaglio
-         in releases/<slug>.html (making of, foto, strumentazione). -->
-    <section class="section music" id="music" aria-labelledby="music-title">
-      <div class="wrap">
-        <header class="section__head">
-          <h2 class="section__title" id="music-title">Music</h2>
-          <p class="section__lead">[MUSIC DESCRIPTION — to be provided]</p>
-        </header>
-
-        <ul class="release-grid" data-releases></ul>
       </div>
     </section>
 

@@ -51,7 +51,6 @@ const RADIO_CONFIG = {
 // interamente nell'album ARTISAN (2023) non sono elencati a parte.
 const COVER_BASE = 'https://i.scdn.co/image/ab67616d0000b273';
 const RELEASES = [
-  { title: 'Peroni Dischi — Full Compilation', year: '2025', note: 'Compilation', url: 'https://open.spotify.com/album/4wei7Cl5luDm1Q12xyB1Zd', slug: 'peroni-dischi-full-compilation', cover: 'e6e22c5d6224769716143ed2' },
   { title: 'Voodoo (feat. Andrea Alice)', year: '2025', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8', slug: 'voodoo', cover: 'd577a038f8be50bad953132a' },
   { title: 'Nuova Memoria Vol. 1', year: '2024', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW', slug: 'nuova-memoria-vol-1', cover: '850bc04a8da20f3ed8383b5c' },
   { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk', slug: 'artisan', cover: '44d9faabc84d2f1aea8ad84d' },
@@ -81,8 +80,11 @@ const SOCIAL_LINKS = [
 document.addEventListener('DOMContentLoaded', () => {
   initYear();
   initNavToggle();
+  initAsciiCat();
+  initBinaryTagline();
   initRadio();
   initMusic();
+  initGallery();
   initSocial();
 });
 
@@ -108,6 +110,69 @@ function initNavToggle() {
   toggle.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
   menu.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+}
+
+/* ==================== HERO — gatto ASCII animato ==================== */
+/* Blink occasionale del gatto ASCII nell'hero (decorativo, aria-hidden):
+   ogni 3–7s chiude gli occhi per un istante. Rispetta prefers-reduced-motion:
+   se l'utente riduce le animazioni, il gatto resta immobile. */
+function initAsciiCat() {
+  const cat = document.querySelector('.ascii-cat');
+  if (!cat) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const open  = '   /\\_/\\\n  ( o.o )\n   > ^ <';
+  const blink = '   /\\_/\\\n  ( -.- )\n   > ^ <';
+
+  const scheduleBlink = () => {
+    setTimeout(() => {
+      cat.textContent = blink;
+      setTimeout(() => { cat.textContent = open; scheduleBlink(); }, 140);
+    }, 3000 + Math.random() * 4000);
+  };
+  scheduleBlink();
+}
+
+/* ==================== HERO — tagline binaria "viva" ==================== */
+/* Ogni ~1,2–3s un bit casuale cambia valore (0↔1) con un lampo corallo per
+   ~320ms, poi torna all'originale: i numeri "si muovono" ma il messaggio
+   ("music for thinking") resta intatto. Ogni cifra è avvolta in uno <span>
+   .bit; gli spazi restano testo. Rispetta prefers-reduced-motion. */
+function initBinaryTagline() {
+  const el = document.querySelector('.hero__tagline');
+  if (!el) return;
+
+  const text = el.textContent;
+  el.textContent = '';
+  const bits = [];
+  for (const ch of text) {
+    if (ch === '0' || ch === '1') {
+      const s = document.createElement('span');
+      s.className = 'bit';
+      s.textContent = ch;
+      el.appendChild(s);
+      bits.push(s);
+    } else {
+      el.appendChild(document.createTextNode(ch));
+    }
+  }
+
+  if (!bits.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const flipOne = () => {
+    const s = bits[Math.floor(Math.random() * bits.length)];
+    if (s.classList.contains('bit--flip')) return; // già in transito: salta
+    const orig = s.textContent;
+    s.textContent = orig === '0' ? '1' : '0';
+    s.classList.add('bit--flip');
+    setTimeout(() => { s.textContent = orig; s.classList.remove('bit--flip'); }, 320);
+  };
+
+  const loop = () => {
+    setTimeout(() => { flipOne(); loop(); }, 1200 + Math.random() * 1800);
+  };
+  loop();
 }
 
 /* ==================== RADIO (Music for Thinking) ==================== */
@@ -231,6 +296,95 @@ function initMusic() {
     card.append(cover, title, meta);
     li.append(card);
     list.appendChild(li);
+  });
+}
+
+/* ==================== GALLERY (pagine release) ==================== */
+/* Miniature (.gallery__item) → lightbox a tutto schermo. Progressive
+   enhancement: l'HTML ha già il link diretto alla foto full; qui lo
+   intercettiamo per aprire l'overlay con navigazione prev/next e tastiera
+   (←/→/Esc). L'overlay è costruito ON-INTERACTION, al primo click. */
+function initGallery() {
+  const grids = document.querySelectorAll('[data-gallery]');
+  if (!grids.length) return;
+
+  // Indice di tutte le foto della pagina (nell'ordine del DOM).
+  const items = [];
+  grids.forEach((grid) => {
+    grid.querySelectorAll('a.gallery__item').forEach((a) => {
+      const img = a.querySelector('img');
+      a.dataset.galleryIndex = String(items.length);
+      items.push({ href: a.getAttribute('href'), alt: img ? img.alt : '' });
+    });
+  });
+  if (!items.length) return;
+
+  let box, imgEl, counterEl, prevBtn, nextBtn, current = 0, lastFocus = null;
+
+  const build = () => {
+    box = document.createElement('div');
+    box.className = 'lightbox';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', 'Photo viewer');
+    box.innerHTML =
+      '<button class="lightbox__btn lightbox__btn--close" type="button" aria-label="Close">×</button>' +
+      '<button class="lightbox__btn lightbox__btn--prev" type="button" aria-label="Previous">‹</button>' +
+      '<img class="lightbox__img" alt="" />' +
+      '<button class="lightbox__btn lightbox__btn--next" type="button" aria-label="Next">›</button>' +
+      '<p class="lightbox__counter"></p>';
+    imgEl     = box.querySelector('.lightbox__img');
+    counterEl = box.querySelector('.lightbox__counter');
+    prevBtn   = box.querySelector('.lightbox__btn--prev');
+    nextBtn   = box.querySelector('.lightbox__btn--next');
+
+    box.querySelector('.lightbox__btn--close').addEventListener('click', close);
+    prevBtn.addEventListener('click', () => show(current - 1));
+    nextBtn.addEventListener('click', () => show(current + 1));
+    box.addEventListener('click', (e) => { if (e.target === box) close(); });
+    document.body.appendChild(box);
+  };
+
+  const show = (i) => {
+    current = (i + items.length) % items.length;
+    imgEl.src = items[current].href;
+    imgEl.alt = items[current].alt;
+    counterEl.textContent = `${current + 1} / ${items.length}`;
+    const multi = items.length > 1;
+    prevBtn.hidden = !multi;
+    nextBtn.hidden = !multi;
+    counterEl.hidden = !multi;
+  };
+
+  const onKey = (e) => {
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') show(current + 1);
+    else if (e.key === 'ArrowLeft') show(current - 1);
+  };
+
+  const open = (i) => {
+    if (!box) build();
+    lastFocus = document.activeElement;
+    show(i);
+    box.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKey);
+  };
+
+  function close() {
+    box.classList.remove('is-open');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey);
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  grids.forEach((grid) => {
+    grid.addEventListener('click', (e) => {
+      const a = e.target.closest('a.gallery__item');
+      if (!a) return;
+      e.preventDefault();
+      open(Number(a.dataset.galleryIndex));
+    });
   });
 }
 
