@@ -134,10 +134,11 @@ function initAsciiCat() {
 }
 
 /* ==================== HERO — tagline binaria "viva" ==================== */
-/* Ogni ~1,2–3s un bit casuale cambia valore (0↔1) con un lampo corallo per
-   ~320ms, poi torna all'originale: i numeri "si muovono" ma il messaggio
-   ("music for thinking") resta intatto. Ogni cifra è avvolta in uno <span>
-   .bit; gli spazi restano testo. Rispetta prefers-reduced-motion. */
+/* Ogni ~0,6–1,5s un paio di cifre casuali cambiano valore (0↔1) con un lampo
+   corallo per ~450ms, poi tornano all'originale: i numeri "si muovono" in modo
+   percepibile ma il messaggio ("music for thinking") resta intatto. Ogni cifra
+   è avvolta in uno <span> .bit; gli spazi restano testo. Rispetta
+   prefers-reduced-motion. */
 function initBinaryTagline() {
   const el = document.querySelector('.hero__tagline');
   if (!el) return;
@@ -166,11 +167,11 @@ function initBinaryTagline() {
     const orig = s.textContent;
     s.textContent = orig === '0' ? '1' : '0';
     s.classList.add('bit--flip');
-    setTimeout(() => { s.textContent = orig; s.classList.remove('bit--flip'); }, 320);
+    setTimeout(() => { s.textContent = orig; s.classList.remove('bit--flip'); }, 450);
   };
 
   const loop = () => {
-    setTimeout(() => { flipOne(); loop(); }, 1200 + Math.random() * 1800);
+    setTimeout(() => { flipOne(); flipOne(); loop(); }, 600 + Math.random() * 900);
   };
   loop();
 }

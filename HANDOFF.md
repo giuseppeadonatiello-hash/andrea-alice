@@ -1,6 +1,6 @@
 # Handoff — Sito Andrea Alice
 
-> Stato al 2026-08-07 (commit **v7**). Unico handoff valido per il progetto.
+> Stato al 2026-08-07 (commit **v8**). Unico handoff valido per il progetto.
 
 ## Percorso canonico
 
@@ -103,6 +103,10 @@ link diretto al file.
 ```
 
 `href` = full, `src` = thumb. L'ordine nel DOM è l'ordine in lightbox.
+
+**Stato**: `releases/artisan.html` ha una galleria **demo** con 5 foto segnaposto
+(SVG in `media/artisan/`), da sostituire con le foto reali. Le altre 7 release non
+hanno ancora la sezione Photos.
 
 ## Da fornire (placeholder attuali)
 
