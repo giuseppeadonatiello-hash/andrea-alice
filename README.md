@@ -7,21 +7,26 @@ cartella così com'è.
 
 ## Stato
 
-- **Fase 1 (struttura e funzionalità)** — completata.
-- **Fase 2 (design)** — moodboard applicata. Direzione: modernismo onirico /
-  tramonto. Palette calda (crema + corallo/sunset, magenta, teal, verde, oro,
-  charcoal), gradiente sunset nell'hero, gatto ASCII come texture, footer scuro
-  strutturato (rif. Ableton), freccia angolata ↗ sui link in uscita. Tutto in
-  `styles.css` dentro `:root`: per ritoccare basta cambiare le variabili.
+Vedi `HANDOFF.md` per lo stato completo e aggiornato (commit v6).
 
-### Ancora da fornire (Fase 2)
+- **Struttura e design** — completati. Palette calda (crema + corallo/sunset,
+  magenta, teal, verde, oro, charcoal), gradiente sunset nell'hero, gatto ASCII
+  come texture, footer scuro strutturato (rif. Ableton), freccia ↗ sui link in
+  uscita. Tutto in `styles.css` dentro `:root`.
+- **Discografia** — 9 release, ordinate per data, sezione Music a griglia di
+  copertine Spotify; ogni release ha una pagina di dettaglio in `releases/`.
+  Fonte di verità: `RELEASES` in `script.js`.
 
-- **Font Faricy New** (commerciale, moretye, ~€22,30): acquistare, esportare in
-  `.woff2`, metterli in `./fonts/` e attivare lo `@font-face` in cima a
-  `styles.css` (già predisposto, commentato). Ora gira su fallback sans pulito.
-- **Asset logo**: il vinile "ANDREA ALICE / ARTISON". Nav e hero usano il
-  wordmark testuale finché non c'è l'immagine.
-- **Favicon** e immagini **Open Graph**.
+### Ancora da fornire
+
+- **Contenuti testuali**: descrizione sezione Music, bio (`bio.html`), tagline
+  hero (oggi in binario), *Making of* / *Gear* nelle pagine `releases/*.html`.
+- **Sorgente radio** *Music for Thinking* (`RADIO_CONFIG` in `script.js`).
+- **Font Faricy New** (commerciale, ~€22,30): esportare `.woff2` in `./fonts/` e
+  attivare lo `@font-face` in cima a `styles.css` (predisposto, commentato). Ora
+  gira su fallback sans di sistema.
+- **Asset logo** (vinile "ANDREA ALICE / ARTISON"), **favicon**, immagini
+  **Open Graph**.
 
 ## Visual audio-reattivo (in corso — `visual-tools/remotion-hero/`)
 
@@ -40,20 +45,24 @@ AUDIO-REATTIVO" in `visual-tools/remotion-hero/src/HeroVisual.tsx`).
 
 | File | Cosa contiene |
 |------|---------------|
-| `index.html` | Single-page semantico: header/hero, `#radio`, `#music`, `#bio` (+ Work), footer/`#contact`. |
-| `styles.css` | Tutta l'estetica in `:root` (placeholder neutri). Mobile-first. |
+| `index.html` | Single-page: header/hero, `#radio` (*Music for Thinking*), `#music` (discografia), footer/`#contact`. |
+| `bio.html` | Pagina Bio statica separata. |
+| `releases/*.html` | 9 pagine di dettaglio, una per release. |
+| `styles.css` | Tutta l'estetica in `:root`. Mobile-first. |
 | `script.js`  | Blocchi CONFIG in testa + logica. Iframe di terze parti caricati on-interaction. |
 
 ## Anteprima in locale
 
-Doppio click su `index.html` basta per HTML/CSS/JS. Per gli embed di terze parti
-(YouTube, Bandcamp) è meglio servire da `http://`:
+Servire da `http://` (non doppio-click) per gli embed di terze parti:
 
 ```bash
-cd ~/Vault_Giuseppe/Progetti_Web/andrea-alice
+cd ~/Developer/andrea-alice
 python3 -m http.server 8000
 # poi apri http://localhost:8000
 ```
+
+`http.server` non manda header di no-cache: dopo un'edit di `styles.css` /
+`script.js` fai un **hard refresh**.
 
 ## Punti di configurazione da compilare
 
@@ -62,13 +71,14 @@ Tutti in cima a `script.js`, nei blocchi CONFIG:
 - **`RADIO_CONFIG`** — `mode: 'youtube'` (default) o `'audio'`.
   - YouTube: `youtube.videoId` (11 caratteri della live/video).
   - Audio: `audio.streamUrl` (URL diretto Icecast/Shoutcast).
-- **`BANDCAMP_CONFIG.releases`** — per ogni release: `id` (album/track, dal
-  pulsante *Share/Embed* di Bandcamp), `bandcampUrl` (fallback), `title`, `type`.
-- **`WORK_ITEMS`** — titolo, anno, nota, link dei lavori/collaborazioni.
+- **`RELEASES`** — discografia (fonte di verità della sezione Music): per ogni
+  release `title`, `year`, `note`, `url` (Spotify), `slug` (→ `releases/<slug>.html`),
+  `cover` (suffisso artwork Spotify; URL 640px via `COVER_BASE`). Ordinare per data.
 - **`SOCIAL_LINKS`** — URL reali (Bandcamp, Spotify, YouTube, Instagram, email).
 
-Testi placeholder in `index.html`: `[TAGLINE]`, `[BIO]`, descrizioni sezioni,
-`[CREDITO]`, meta description.
+Testi placeholder da compilare: descrizione sezione Music e meta description in
+`index.html`, bio in `bio.html`, tagline hero (oggi in binario), *Making of* /
+*Gear* nelle pagine `releases/*.html`.
 
 ## Ritocchi estetici possibili (tutti via `:root`)
 

@@ -1,133 +1,120 @@
 # Handoff — Sito Andrea Alice
 
-> Stato al 2026-08-01. Sostituisce `~/Vault_Giuseppe/HANDOFF-andrea-alice.md`
-> (radice del vault): quel file descriveva uno stato precedente e ora è solo
-> un puntatore qui. Questo è l'unico handoff valido per il progetto.
+> Stato al 2026-08-07 (commit **v6**). Unico handoff valido per il progetto.
 
 ## Percorso canonico
 
 ```
-~/Vault_Giuseppe/Progetti_Web/andrea-alice/
+~/Developer/andrea-alice
 ```
 
-Repo git locale, 2 commit:
+Il progetto **vive fuori dal vault**: nessun repo di sviluppo dentro iCloud
+(`node_modules`/build sincronizzati romperebbero Obsidian — vedi `MEMORY.md`).
+Repo git locale, branch `main`, storia a checkpoint `v1`…`v6`.
 
-```
-9ec3f8c  v2 — movimento nell'hero via CSS puro (pulviscolo derivante + reveal
-         titolo/tagline), Remotion congelato in attesa di traccia audio
-a77269f  v1 — checkpoint Fase 2 (sunset/moodboard, ricostruita da sessione
-         parallela) + scaffold Remotion e aggancio video hero
-```
+## Cos'è
 
-**Nota su una biforcazione risolta**: in una sessione parallela era comparsa
-una seconda copia del progetto in `30_Progetti/Andrea Alice/Progetti_Web/andrea-alice/`
-— un redesign luxury/editorial (Hallmark + Impeccable, palette oro unica,
-Cormorant Garamond) che l'utente ha giudicato "troppo semplice, minimale,
-cheap". Tra le due, **questa cartella** (`Progetti_Web/andrea-alice/`, Fase 2
-sunset) è stata confermata come quella canonica. L'altra copia esiste ancora,
-intatta, con la sua storia git separata (4 commit) — parcheggiata, non
-cancellata, nel caso serva recuperarne qualcosa (es. i fix di audit
-responsive/contrasto che aveva).
+Sito statico per il progetto musicale **Andrea Alice**: HTML + CSS + vanilla JS,
+nessun build step, nessuna dipendenza. Deployabile così com'è (Netlify / GitHub
+Pages / Vercel).
 
-## Cosa contiene
+## File
 
-- `index.html` — single-page semantico: header/nav, hero, `#radio`,
-  `#music`, `#bio` (+ Work), footer/`#contact`.
-- `styles.css` — tutta l'estetica in `:root` come custom properties.
-  Palette sunset: `--color-cream`, `--color-coral` (accento primario),
-  `--color-magenta`, `--color-teal`, `--color-green`, `--color-gold`,
-  `--color-ink` (charcoal).
-- `script.js` — blocchi CONFIG in testa (`RADIO_CONFIG`, `BANDCAMP_CONFIG`,
-  `WORK_ITEMS`, `SOCIAL_LINKS`) + logica. Iframe di terze parti caricati
+- `index.html` — single-page: header/nav, hero, `#radio` (*Music for Thinking*),
+  `#music` (discografia), footer/`#contact`.
+- `bio.html` — pagina statica separata (oggi Lorem ipsum).
+- `releases/*.html` — 9 pagine di dettaglio, una per release (copertina Spotify,
+  pulsante *Listen on Spotify*, blocchi *Making of* / *Gear* placeholder).
+- `styles.css` — tutta l'estetica in `:root` come custom properties (palette
+  sunset: crema, corallo, magenta, teal, verde, oro, charcoal).
+- `script.js` — blocchi CONFIG in testa + logica. Iframe di terze parti caricati
   on-interaction.
-- `README.md` — fonte primaria per stato/configurazione, leggerlo per primo.
-- `visual-tools/remotion-hero/` — tool di produzione separato (Remotion),
-  vedi sotto.
+- `visual-tools/remotion-hero/` — tool di produzione separato (Remotion), NON è
+  una dipendenza del sito. Vedi sotto.
 
-## Stato per fase
+## Discografia (fonte di verità: `RELEASES` in `script.js`)
 
-**Fase 1 (struttura)** — completata. Nav sticky con toggle mobile
-accessibile, responsive, focus visibile, `prefers-reduced-motion` rispettato
-ovunque (motes, video, reveal — tutti disattivati in un unico blocco a fondo
-`styles.css`).
+9 release, **ordinate per data (dal più recente)**. Ogni voce: `title`, `year`,
+`note`, `url` (Spotify), `slug` (→ `releases/<slug>.html`), `cover` (suffisso
+dell'artwork Spotify; l'URL 640px si compone con `COVER_BASE` =
+`https://i.scdn.co/image/ab67616d0000b273`).
 
-**Fase 2 (design)** — moodboard applicata. Modernismo onirico/tramonto:
-gradiente sunset radiale nell'hero (corallo → crema, in alto a destra),
-gatto ASCII come texture (color magenta), footer scuro strutturato
-(riferimento Ableton), freccia angolata ↗ sui link in uscita.
+| Data | Release | Note |
+|------|---------|------|
+| 2025 | Peroni Dischi — Full Compilation | Compilation |
+| 2025 | Voodoo (feat. Andrea Alice) | Collaboration |
+| 2024 | Nuova Memoria Vol. 1 | Compilation |
+| 2023 | ARTISAN | Album |
+| 2022 | SOGNOSOGNOSOGNO EP | EP |
+| 2021 | Può Succedere | Policrom · Single |
+| 2019 | Intanto | Policrom · Single |
+| 2016 | La Vita degli Altri | Policrom · Album |
+| 2013 | Momento | Policrom · EP |
 
-**Fase 2.5 (movimento, appena aggiunta)** — CSS puro, zero dipendenze:
-3 "motes" (puntini di luce corallo/oro/magenta) che derivano lentamente
-nell'hero (`@keyframes hero-drift`, 19–27s, `blur(1px)`), titolo e tagline
-con fade-rise all'ingresso (`@keyframes hero-reveal`). Verificato dal vivo
-nel browser, nessun errore console.
+Regole fissate:
+- I singoli/EP **confluiti interamente nell'album ARTISAN** (2023) non sono
+  elencati a parte: SENIOR EL GATO (EP), APRILE PER SEMPRE, FUORI STRADA ANDARE,
+  OLTRE IL BUIO. Verificato dalla tracklist Spotify di ARTISAN.
+- Le release **Policrom** vedono Andrea Alice come co-autore.
+- **Copertine**: hotlink a Spotify CDN (`i.scdn.co`), ricavate via endpoint
+  pubblico oEmbed. Se un URL si rompe: rifare l'oEmbed
+  (`https://open.spotify.com/oembed?url=<album_url>`) e sostituire il suffisso in
+  `RELEASES` (grid) **e** nella relativa `releases/<slug>.html`.
+- **Aggiungere/togliere una release**: aggiornare `RELEASES` in `script.js`
+  (grid, home) **e** creare/eliminare `releases/<slug>.html` (le pagine di
+  dettaglio sono statiche; usare una esistente come modello). Tenere i due
+  allineati.
 
-**Visual audio-reattivo (Remotion, congelato)** — `visual-tools/remotion-hero/`:
-- `npm install` già eseguito dall'utente con successo (250 pacchetti,
-  0 vulnerabilità); `npm run preview` avvia Remotion Studio senza errori
-  ("Built in 7824ms").
-- Composizione `HeroVisual`: pulviscolo generativo (46 motes, palette
-  corallo/oro/magenta pesata 55/30/15, bagliore d'ambiente che riprende
-  esattamente posizione/colore di `--gradient-hero`), placeholder
-  deterministico via `useBreath()` — **non ancora audio-reattivo**, nessuna
-  traccia audio disponibile.
-  - L'apparente "non vedo niente" in Studio è quasi certamente dovuto alla
-    bassissima opacità degli elementi (5–60%, pensati per stare *dietro* al
-    testo, non riempire lo schermo) — non un errore della pipeline, che
-    compila pulita.
-- `index.html`/`styles.css` hanno già il tag `<video class="hero__bg-video">`
-  pronto: finché `out/hero-visual.webm` non viene renderizzato e copiato in
-  questa cartella, il video non carica nulla e resta visibile solo il
-  gradiente CSS + i motes — niente si rompe nel frattempo.
-- **Per riprendere**: quando c'è una traccia audio reale, mettere il file in
-  `visual-tools/remotion-hero/public/track.mp3` e seguire il commento
-  "SWAP AUDIO-REATTIVO" in fondo a `src/HeroVisual.tsx` (sostituisce
-  `useBreath()` con `useAudioData()`/`visualizeAudio()` da
-  `@remotion/media-utils`, già in `package.json`). Poi `npm run render` e
-  copiare `out/hero-visual.webm` in `../` (questa cartella).
-- `visual-tools/remotion-hero/package-lock.json` presente (generato
-  dall'installazione reale) — utile per riprodurre l'ambiente esatto.
+## Sezione Music — layout
 
-## Ancora da fornire (contenuti reali, tutti placeholder `[X — da fornire]`)
+Variante A (scelta): griglia di **copertine** (2 col mobile → 3 → 4 desktop),
+lift al hover; l'intera card linka la pagina di dettaglio, dove sta il pulsante
+*Listen on Spotify*. Classi: `.release-grid`, `.release__card`,
+`.release__cover`, `.release__title`, `.release__meta`.
 
-- **Font Faricy New** (commerciale, moretye, ~€22,30): acquistare, esportare
-  in `.woff2`, metterli in `./fonts/` e attivare l'`@font-face` già
-  predisposto e commentato in cima a `styles.css`. Ora gira su fallback sans
-  di sistema.
-- **Asset logo**: vinile "ANDREA ALICE / ARTISON" — non ancora chiarito se
-  "ARTISON" è sotto-nome/etichetta o tagline. Nav e hero usano il wordmark
-  testuale finché non c'è l'immagine.
-- **Favicon** e immagini **Open Graph**.
-- **Tagline + bio reali** (hero e sezione Bio).
-- **`script.js` → CONFIG**: `RADIO_CONFIG` (YouTube video id o stream
-  Icecast/Shoutcast reale), `BANDCAMP_CONFIG.releases` (id/URL/titoli reali),
-  `WORK_ITEMS`, `SOCIAL_LINKS`.
-- **Footer**: `[CREDITO]` e meta description in `index.html`.
+## Da fornire (placeholder attuali)
 
-## Come riprendere / verificare
+- **Descrizione sezione Music** — `[MUSIC DESCRIPTION — to be provided]` in
+  `index.html`.
+- **Bio** — `bio.html` è Lorem ipsum.
+- **Tagline hero + meta description** — oggi stringhe in binario
+  (`music for thinking`).
+- **Making of / Gear** — placeholder su tutte le 9 pagine `releases/*.html`.
+- **Sorgente radio** *Music for Thinking* — `RADIO_CONFIG.youtube.videoId`
+  ancora `YOUTUBE_VIDEO_ID` (o `mode: 'audio'` + `streamUrl`).
+- **Font Faricy New** (commerciale, moretye, ~€22,30): acquistare, esportare in
+  `.woff2` in `./fonts/`, attivare l'`@font-face` già predisposto/commentato in
+  cima a `styles.css`. Ora gira su fallback sans di sistema.
+- **Asset logo** (vinile "ANDREA ALICE / ARTISON"), **favicon**, immagini
+  **Open Graph**.
+
+## Visual audio-reattivo (Remotion, congelato)
+
+`visual-tools/remotion-hero/`: scaffold pronto, composizione placeholder
+generativa con palette identica ai token corallo/oro/magenta. `index.html` e
+`styles.css` hanno già `<video class="hero__bg-video">` che punta a
+`hero-visual.webm`: finché il file non è renderizzato e copiato nella root,
+l'hero mostra solo il gradiente CSS + i motes — niente si rompe (unico 404 in
+console: `hero-visual.webm`, atteso). **Per riprendere**: mettere una traccia
+audio in `visual-tools/remotion-hero/public/track.mp3` e seguire il commento
+"SWAP AUDIO-REATTIVO" in `src/HeroVisual.tsx`, poi `npm run render` e copiare
+`out/hero-visual.webm` nella root.
+
+## Anteprima in locale
 
 ```bash
-cd ~/Vault_Giuseppe/Progetti_Web/andrea-alice
+cd ~/Developer/andrea-alice
 python3 -m http.server 8000
 # poi apri http://localhost:8000
 ```
 
-Per Remotion:
+Servire da `http://` (non doppio-click) per gli embed di terze parti. Nota:
+`http.server` non manda header di no-cache, quindi dopo un'edit di
+`styles.css`/`script.js` serve un **hard refresh** per vedere i cambiamenti.
 
-```bash
-cd ~/Vault_Giuseppe/Progetti_Web/andrea-alice/visual-tools/remotion-hero
-npm run preview   # Studio interattivo
-npm run render    # produce out/hero-visual.webm
-```
+## Skill utili
 
-**Nota sul path**: usare sempre `~/Vault_Giuseppe` (symlink canonico, vedi
-`MEMORY.md`), non un path relativo dalla home — è la causa dell'unico
-inciampo avuto in questa sessione (`cd: no such file or directory`).
-
-## Skill suggerite
-
-- **`stile-donatiello`** — quando si scrivono i testi reali (tagline, bio)
-  nella voce dell'utente.
-- Per ulteriori ritocchi visivi rapidi senza Remotion: CSS diretto (come
-  fatto per il movimento in Fase 2.5) resta la via più economica e già
-  collaudata in questo progetto.
+- **`stile-donatiello`** — per i testi reali (tagline, bio) nella voce
+  dell'utente.
+- Ritocchi visivi rapidi: CSS diretto sui token in `:root` resta la via più
+  economica e collaudata.
