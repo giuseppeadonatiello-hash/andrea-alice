@@ -1,0 +1,16 @@
+# Dipendenze — mai nel vault: iCloud sincronizzerebbe decine di migliaia di file
+node_modules/
+
+# Cache e output di build
+.cache/
+dist/
+build/
+out/
+.remotion/
+
+# Sistema
+.DS_Store
+*.log
+
+# Tooling locale Claude Code (path assoluti, non portabile)
+.claude/

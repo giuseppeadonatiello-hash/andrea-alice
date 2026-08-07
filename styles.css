@@ -131,8 +131,7 @@ button { font: inherit; cursor: pointer; }
 :target { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
 
 /* Freccia angolata ↗ come motivo per i link in uscita (moodboard) */
-.social a::after,
-.release__fallback::after {
+.social a::after {
   content: " \2197";   /* ↗ */
   font-style: normal;
   color: var(--color-accent);
@@ -382,30 +381,101 @@ button { font: inherit; cursor: pointer; }
 .player__note { font-size: var(--fs-small); color: var(--color-text-muted); }
 
 /* ============================= RELEASE GRID ============================= */
+/* Variante A — griglia di copertine. La copertina Spotify è protagonista;
+   titolo e anno sotto. L'intera card linka la pagina di dettaglio (dove sta
+   il pulsante "Listen on Spotify"). 2 col mobile → 3 → 4. */
 .release-grid {
   display: grid;
-  gap: var(--space-lg);
-  grid-template-columns: 1fr;
+  gap: var(--space-lg) var(--space-md);
+  grid-template-columns: repeat(2, 1fr);
 }
-@media (min-width: 600px) {
-  .release-grid { grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); }
-}
-.release {
-  background: var(--color-surface);
+@media (min-width: 640px) { .release-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px) { .release-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.release__card { display: block; }
+.release__cover {
+  width: 100%;
+  height: auto;                 /* neutralizza width/height="640" → resta quadrata */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-1);
-  padding: var(--space-md);
-  display: grid;
-  gap: var(--space-sm);
+  background: var(--color-surface);
+  transition: transform var(--transition-med), box-shadow var(--transition-med);
 }
-.release__title { font-weight: var(--font-weight-bold); }
-.release__meta { color: var(--color-text-muted); font-size: var(--fs-small); font-family: var(--font-mono); }
-.release__actions { display: flex; gap: var(--space-md); align-items: center; font-size: var(--fs-small); }
-.release__fallback { color: var(--color-text-muted); }
-.release__fallback:hover { color: var(--color-accent); }
-.release__more { color: var(--color-accent); }
-.release__more:hover { color: var(--color-accent-hover); }
+.release__card:hover .release__cover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(28, 27, 25, 0.12);
+}
+.release__title { margin-top: var(--space-sm); font-weight: var(--font-weight-bold); line-height: 1.2; }
+.release__meta { margin-top: var(--space-2xs); color: var(--color-text-muted); font-size: var(--fs-small); font-family: var(--font-mono); }
+
+/* ===================== RELEASE DETAIL (pagina singola) ===================== */
+/* Intestazione editoriale: copertina Spotify + titolo/meta/ascolto.
+   Colonna singola su mobile, due colonne (cover | info) da 720px in su. */
+.release-hero {
+  display: grid;
+  gap: var(--space-lg);
+  align-items: center;
+  margin-bottom: var(--space-2xl);
+}
+@media (min-width: 720px) {
+  .release-hero {
+    grid-template-columns: minmax(0, 20rem) 1fr;
+    gap: var(--space-xl);
+  }
+}
+.release-hero__cover {
+  width: 100%;
+  max-width: 20rem;
+  height: auto;              /* neutralizza l'attributo height="640" → resta quadrata */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+  background: var(--color-surface);
+}
+.release-hero__info { display: grid; gap: var(--space-md); justify-items: start; }
+.release-hero__kicker {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.release-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 3.25rem);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+}
+
+/* Bottone primario riutilizzabile (freccia ↗ = link in uscita, come da moodboard) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  border-radius: var(--radius-pill);
+  padding: var(--space-xs) var(--space-lg);
+  font-weight: var(--font-weight-bold);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.btn--accent { background: var(--color-accent); color: var(--color-accent-contrast); }
+.btn--accent:hover { background: var(--color-accent-hover); }
+.btn:active { transform: translateY(1px); }
+.btn--accent::after { content: " \2197"; color: var(--color-accent-contrast); }
+
+/* Blocchi di contenuto (Making of, Gear): ora placeholder, contenuti da fornire */
+.release-block + .release-block { margin-top: var(--space-xl); }
+.release-block .section__title--sub { margin-bottom: var(--space-sm); }
+.placeholder-note {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+}
 
 /* ================================ PROSE ================================ */
 .prose { max-width: var(--measure); }

@@ -45,20 +45,21 @@ const RADIO_CONFIG = {
    Per aggiungere una release: aggiungere qui una voce e creare
    releases/<slug>.html (vedi le pagine esistenti come modello).
    ==================================================================== */
+// Discografia definitiva, ordinata per data (dal più recente). `cover` è il
+// suffisso dell'artwork Spotify (l'URL 640px si compone con COVER_BASE). Le
+// release Policrom vedono Andrea Alice come co-autore. I singoli/EP confluiti
+// interamente nell'album ARTISAN (2023) non sono elencati a parte.
+const COVER_BASE = 'https://i.scdn.co/image/ab67616d0000b273';
 const RELEASES = [
-  { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk', slug: 'artisan' },
-  { title: 'SENIOR EL GATO', year: '2023', note: 'EP', url: 'https://open.spotify.com/album/3SmYjEoKjUyYyL1lmYU7C1', slug: 'senior-el-gato' },
-  { title: 'APRILE PER SEMPRE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/4kbbns7EIJ5wbDZmmul6QB', slug: 'aprile-per-sempre' },
-  { title: 'FUORI STRADA ANDARE', year: '2023', note: 'Single', url: 'https://open.spotify.com/album/3KZA4DlEtiRvmrY87JSsxT', slug: 'fuori-strada-andare' },
-  { title: 'TUTTOBIANCO / CATTIVA BUGIARDA', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/32Mp31839n5EqKVjTPN0M2', slug: 'tuttobianco-cattiva-bugiarda' },
-  { title: 'SOGNOSOGNOSOGNO EP', year: '2022', note: 'EP', url: 'https://open.spotify.com/album/5oWAGhvlG14lvEKqU1hKpG', slug: 'sognosognosogno-ep' },
-  { title: 'SOGNOSOGNOSOGNO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/4matYKQGXRJrkZCBiT3wtg', slug: 'sognosognosogno' },
-  { title: 'OLTRE IL BUIO', year: '2022', note: 'Single', url: 'https://open.spotify.com/album/3PilquX2naxALyjuigAnci', slug: 'oltre-il-buio' },
-  { title: 'Voodoo (feat. Andrea Alice)', year: '', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8', slug: 'voodoo' },
-  { title: 'Peroni Dischi — Full Compilation', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4wei7Cl5luDm1Q12xyB1Zd', slug: 'peroni-dischi-full-compilation' },
-  { title: 'Peroni Dischi Vol. 2', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/3OcQfdJbTeoQ4fG5nFDChs', slug: 'peroni-dischi-vol-2' },
-  { title: 'Nuova Memoria Vol. 1', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW', slug: 'nuova-memoria-vol-1' },
-  { title: 'NVAMR002', year: '', note: 'Compilation', url: 'https://open.spotify.com/album/4PERTjMot9SpukCwKNBIsT', slug: 'nvamr002' },
+  { title: 'Peroni Dischi — Full Compilation', year: '2025', note: 'Compilation', url: 'https://open.spotify.com/album/4wei7Cl5luDm1Q12xyB1Zd', slug: 'peroni-dischi-full-compilation', cover: 'e6e22c5d6224769716143ed2' },
+  { title: 'Voodoo (feat. Andrea Alice)', year: '2025', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8', slug: 'voodoo', cover: 'd577a038f8be50bad953132a' },
+  { title: 'Nuova Memoria Vol. 1', year: '2024', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW', slug: 'nuova-memoria-vol-1', cover: '850bc04a8da20f3ed8383b5c' },
+  { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk', slug: 'artisan', cover: '44d9faabc84d2f1aea8ad84d' },
+  { title: 'SOGNOSOGNOSOGNO EP', year: '2022', note: 'EP', url: 'https://open.spotify.com/album/5oWAGhvlG14lvEKqU1hKpG', slug: 'sognosognosogno-ep', cover: '9484f9f8d8044eef8c85c496' },
+  { title: 'Può Succedere', year: '2021', note: 'Policrom · Single', url: 'https://open.spotify.com/album/4tdIkzLrin8h3U7qwPzf8v', slug: 'puo-succedere', cover: 'eefadaecd60b6bd368d09093' },
+  { title: 'Intanto', year: '2019', note: 'Policrom · Single', url: 'https://open.spotify.com/album/7GPjKs6teyEexUNwgswYql', slug: 'intanto', cover: 'dbbbefb93a6fc160c2fda77a' },
+  { title: 'La Vita degli Altri', year: '2016', note: 'Policrom · Album', url: 'https://open.spotify.com/album/2GJzGi4xLn6NDvJMBxKzXf', slug: 'la-vita-degli-altri', cover: '9ed334ab1bb38bf182e851a4' },
+  { title: 'Momento', year: '2013', note: 'Policrom · EP', url: 'https://open.spotify.com/album/0klSZf8MTKRSne1KGZTAzR', slug: 'momento', cover: 'b0d69210f62b3f8177c95369' },
 ];
 
 /* ====================================================================
@@ -197,6 +198,8 @@ function buildYouTubeSrc(cfg) {
 }
 
 /* ==================== MUSIC (discografia) ==================== */
+/* Variante A: card a copertina. L'intera card linka la pagina di dettaglio
+   (releases/<slug>.html), dove sta il pulsante "Listen on Spotify". */
 function initMusic() {
   const list = document.querySelector('[data-releases]');
   if (!list) return;
@@ -204,6 +207,18 @@ function initMusic() {
   RELEASES.forEach((rel) => {
     const li = document.createElement('li');
     li.className = 'release';
+
+    const card = document.createElement('a');
+    card.className = 'release__card';
+    card.href = `releases/${rel.slug}.html`;
+
+    const cover = document.createElement('img');
+    cover.className = 'release__cover';
+    cover.src = COVER_BASE + rel.cover;
+    cover.alt = `${rel.title} — copertina`;
+    cover.loading = 'lazy';
+    cover.width = 640;
+    cover.height = 640;
 
     const title = document.createElement('p');
     title.className = 'release__title';
@@ -213,23 +228,8 @@ function initMusic() {
     meta.className = 'release__meta';
     meta.textContent = [rel.year, rel.note].filter(Boolean).join(' · ');
 
-    const actions = document.createElement('div');
-    actions.className = 'release__actions';
-
-    const listen = document.createElement('a');
-    listen.className = 'release__fallback';
-    listen.href = rel.url;
-    listen.target = '_blank';
-    listen.rel = 'noopener';
-    listen.textContent = 'Listen';
-
-    const more = document.createElement('a');
-    more.className = 'release__more';
-    more.href = `releases/${rel.slug}.html`;
-    more.textContent = 'More info';
-
-    actions.append(listen, more);
-    li.append(title, meta, actions);
+    card.append(cover, title, meta);
+    li.append(card);
     list.appendChild(li);
   });
 }

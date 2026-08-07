@@ -39,25 +39,33 @@
       <div class="wrap">
         <p class="back-link"><a href="../index.html#music">&larr; Back to Music</a></p>
 
-        <header class="section__head">
-          <h1 class="section__title" id="release-title">ARTISAN</h1>
-          <p class="section__lead">2023 &middot; Album &middot; <a class="release__fallback" href="https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk" target="_blank" rel="noopener">Listen on Spotify</a></p>
-        </header>
-
-        <div class="prose">
-          <h2 class="section__title section__title--sub">Making of</h2>
-          <p>[MAKING OF &mdash; to be provided]</p>
-
-          <h2 class="section__title section__title--sub">Photos</h2>
-          <!-- Quando ci sono foto reali, sostituire il placeholder con una griglia, es.:
-          <div class="photo-grid">
-            <img src="../assets/releases/artisan/photo-1.jpg" alt="" />
+        <!-- Intestazione: copertina Spotify come immagine unica della release -->
+        <div class="release-hero">
+          <img
+            class="release-hero__cover"
+            src="https://i.scdn.co/image/ab67616d0000b27344d9faabc84d2f1aea8ad84d"
+            alt="ARTISAN — album cover"
+            width="640" height="640"
+            loading="lazy" />
+          <div class="release-hero__info">
+            <p class="release-hero__kicker">2023 &middot; Album</p>
+            <h1 class="release-hero__title" id="release-title">ARTISAN</h1>
+            <a class="btn btn--accent" href="https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk" target="_blank" rel="noopener">Listen on Spotify</a>
           </div>
-          -->
-          <p>[PHOTOS &mdash; to be provided]</p>
+        </div>
 
-          <h2 class="section__title section__title--sub">Gear used</h2>
-          <p>[GEAR &mdash; to be provided]</p>
+        <!-- Contenuti da fornire: making of e strumentazione. Nessuna sezione
+             Photos (la copertina Spotify è l'unica immagine della pagina). -->
+        <div class="prose release-detail">
+          <section class="release-block">
+            <h2 class="section__title section__title--sub">Making of</h2>
+            <p class="placeholder-note">[MAKING OF &mdash; to be provided]</p>
+          </section>
+
+          <section class="release-block">
+            <h2 class="section__title section__title--sub">Gear used</h2>
+            <p class="placeholder-note">[GEAR &mdash; to be provided]</p>
+          </section>
         </div>
       </div>
     </section>
