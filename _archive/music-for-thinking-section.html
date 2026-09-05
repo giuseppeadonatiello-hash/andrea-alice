@@ -1,0 +1,74 @@
+<!-- ====================================================================
+     ARCHIVIATO 2026-08-23 — sezione "Music for Thinking" (radio player)
+     --------------------------------------------------------------------
+     Tolta dalla home su richiesta esplicita di Giuseppe ("per il momento
+     togliamo tutta la sezione music for thinking, archiviala in un modo
+     che possa attivarla in un secondo momento").
+
+     PER RIATTIVARLA:
+     1. Nel <nav> di index.html, dentro <ul class="nav__menu">, rimettere
+        subito dopo la voce "Music":
+          <li><a href="#radio">Music for Thinking</a></li>
+
+     2. In index.html, dentro <main>, rimettere questo blocco <section>
+        subito dopo la sezione #music (prima della chiusura di </main>):
+        (il markup completo è qui sotto, invariato)
+
+     3. Nulla da toccare in script.js: RADIO_CONFIG, initRadio() e
+        buildYouTubeSrc() sono rimasti nel file, con la guardia
+        `if (!root) return;` — non hanno mai smesso di funzionare, erano
+        solo senza markup a cui agganciarsi. Configurare RADIO_CONFIG
+        (videoId YouTube o streamUrl audio) resta comunque da fare
+        indipendentemente dalla riattivazione.
+
+     4. In styles.css le regole `.radio`, `.player*` non sono state
+        toccate: restano nel foglio di stile, pronte.
+     ==================================================================== -->
+
+    <!-- ============================== RADIO ============================== -->
+    <!-- Elemento centrale del sito. Sorgente configurata in script.js → RADIO_CONFIG -->
+    <section class="section radio" id="radio" aria-labelledby="radio-title">
+      <div class="wrap">
+        <header class="section__head">
+          <h2 class="section__title" id="radio-title">Music for Thinking</h2>
+          <p class="section__lead">Music kept to the edge of attention — an ambience for study, rest, and reverie.</p>
+        </header>
+
+        <div class="player" data-player>
+          <!-- Stato "on air" -->
+          <div class="player__status">
+            <span class="player__dot" data-player-dot aria-hidden="true"></span>
+            <span class="player__state" data-player-state>OFFLINE</span>
+          </div>
+
+          <!-- La sorgente reale (iframe YouTube o <audio>) viene iniettata qui
+               da script.js SOLO all'interazione (on-interaction) per non
+               appesantire il first paint. -->
+          <div class="player__media" data-player-media></div>
+
+          <!-- Controlli custom, stilizzabili in Fase 2 via variabili CSS -->
+          <div class="player__controls">
+            <button
+              class="player__btn player__btn--play"
+              type="button"
+              data-player-play
+              aria-label="Start the stream">
+              <span data-player-play-label>Play</span>
+            </button>
+
+            <!-- Volume: usato solo in modalità (B) audio; nascosto in modalità YouTube -->
+            <label class="player__volume" data-player-volume-wrap hidden>
+              <span class="player__volume-icon" aria-hidden="true">Vol</span>
+              <input
+                class="player__volume-input"
+                type="range"
+                min="0" max="100" value="80"
+                data-player-volume
+                aria-label="Volume" />
+            </label>
+          </div>
+
+          <p class="player__note">Source coming soon.</p>
+        </div>
+      </div>
+    </section>

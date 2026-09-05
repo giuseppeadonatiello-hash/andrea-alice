@@ -65,11 +65,10 @@ const RELEASES = [
    3) SOCIAL / CONTATTI
    ==================================================================== */
 const SOCIAL_LINKS = [
-  { label: 'Bandcamp',  url: 'https://ANDREAALICE.bandcamp.com' },
-  { label: 'Spotify',   url: 'https://open.spotify.com/artist/6h2Jo8yyi50civQ54IciRP' },
+  { label: 'Bandcamp',  url: 'https://andreaalice.bandcamp.com/' },
   { label: 'YouTube — Andrea Alice', url: 'https://youtube.com/channel/UCuNsu0rOt52K-yzCKN9g3PQ' },
   { label: 'YouTube — Policrom',     url: 'https://youtube.com/@policrom_4192' },
-  { label: 'Instagram', url: 'https://instagram.com/andrea__alice' },
+  { label: 'Instagram', url: 'https://instagram.com/andrea___alice' },
   { label: 'Email',     url: 'mailto:textme.andreaalice@gmail.com' },
 ];
 

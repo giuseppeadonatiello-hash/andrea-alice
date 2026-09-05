@@ -4,7 +4,7 @@
    Direzione moodboard: modernismo onirico / tramonto · palette calda
    (crema + corallo/sunset, magenta, teal, verde, oro, charcoal) ·
    layout modulare pulito · footer scuro strutturato · texture ASCII/codice ·
-   freccia angolata come motivo · tipografia Faricy New (sans pulito).
+   freccia angolata come motivo · tipografia Jost (geometrico, prova per Faricy New).
 
    Tutta l'estetica vive qui in :root come custom properties.
    ==================================================================== */
@@ -101,6 +101,26 @@
   font-weight: 500;                 // Medium (enfasi/UI)
   font-style: normal;
   src: url("fonts/FaricyNew-Medium.woff2") format("woff2");
+  font-display: swap;
+}
+------------------------------------------------------------------------- */
+
+/* ---- Jost (Google Fonts, self-hosted in ./fonts/) — provata come alternativa
+   ad Ableton-simile, poi scartata (2026-09-05): troppo simile al sito
+   ableton.com stesso. File .woff2 lasciati in ./fonts/ per un eventuale
+   riuso futuro, ma il font non è più referenziato in --font-display.
+@font-face {
+  font-family: "Jost";
+  font-weight: 300;
+  font-style: normal;
+  src: url("fonts/Jost-Light.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Jost";
+  font-weight: 500;
+  font-style: normal;
+  src: url("fonts/Jost-Medium.woff2") format("woff2");
   font-display: swap;
 }
 ------------------------------------------------------------------------- */
@@ -318,19 +338,19 @@ button { font: inherit; cursor: pointer; }
 .ascii-cat {
   position: absolute;
   z-index: 1;
-  top: 12%;
-  right: clamp(1rem, 6vw, 5rem);
+  top: 8%;
+  right: clamp(0.5rem, 4vw, 4rem);
   margin: 0;
   font-family: var(--font-mono);
-  font-size: clamp(0.9rem, 2.4vw, 1.6rem);
+  font-size: clamp(1.8rem, 6.5vw, 4rem);
   line-height: 1.15;
   color: var(--color-magenta);
-  opacity: 0.22;
+  opacity: 0.3;
   white-space: pre;
   pointer-events: none;
   user-select: none;
 }
-@media (max-width: 480px) { .ascii-cat { opacity: 0.16; } }
+@media (max-width: 480px) { .ascii-cat { opacity: 0.2; } }
 
 /* =============================== SECTIONS =============================== */
 .section { padding-block: var(--space-2xl); border-bottom: var(--border-width) solid var(--color-border); }
@@ -481,6 +501,19 @@ button { font: inherit; cursor: pointer; }
   font-family: var(--font-mono);
   font-size: var(--fs-small);
 }
+.gear-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+}
+.gear-list li {
+  padding-block: var(--space-2xs);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.gear-list li:first-child { border-top: var(--border-width) solid var(--color-border); }
+.gear-list a:hover { color: var(--color-accent); }
 
 /* ============================ GALLERY (Photos) ============================ */
 /* Griglia di miniature nelle pagine release → lightbox a tutto schermo.
@@ -571,6 +604,32 @@ button { font: inherit; cursor: pointer; }
 /* ================================ PROSE ================================ */
 .prose { max-width: var(--measure); }
 .prose p + p { margin-top: var(--space-md); }
+
+/* ============================ BIO — layout ============================ */
+/* Testo a colonna singola su mobile; da 720px, testo a sinistra e foto a
+   destra (stessa logica a due colonne di .release-hero, invertita). */
+.bio-layout {
+  display: grid;
+  gap: var(--space-lg);
+  align-items: start;
+}
+@media (min-width: 720px) {
+  .bio-layout {
+    grid-template-columns: 1fr minmax(0, 18rem);
+    gap: var(--space-xl);
+  }
+}
+.bio-photo {
+  width: 100%;
+  max-width: 18rem;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+  background: var(--color-surface);
+}
 
 /* ================================ FOOTER ================================ */
 /* Footer scuro strutturato (moodboard, riferimento Ableton) */
