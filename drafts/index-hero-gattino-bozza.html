@@ -50,7 +50,16 @@
       <video class="hero__bg-video" aria-hidden="true" autoplay muted loop playsinline>
         <source src="hero-visual.webm" type="video/webm" />
       </video>
-      <canvas class="hero__scope" aria-hidden="true" width="220" height="90"></canvas>
+      <!-- Pulviscolo CSS: movimento leggero finché il video Remotion non c'è -->
+      <div class="hero__motes" aria-hidden="true">
+        <span class="hero__mote hero__mote--1"></span>
+        <span class="hero__mote hero__mote--2"></span>
+        <span class="hero__mote hero__mote--3"></span>
+      </div>
+      <!-- Texture decorativa: gatto ASCII (moodboard). Solo estetica → aria-hidden -->
+      <pre class="ascii-cat" aria-hidden="true">   /\_/\
+  ( o.o )
+   > ^ <</pre>
       <div class="wrap hero__inner">
         <h1 class="hero__title" id="hero-title">Andrea Alice</h1>
         <p class="hero__tagline">01101101 01110101 01110011 01101001 01100011 00100000 01100110 01101111 01110010 00100000 01110100 01101000 01101001 01101110 01101011 01101001 01101110 01100111</p>
@@ -78,15 +87,8 @@
     <div class="wrap">
       <h2 class="section__title" id="contact-title">Contact</h2>
 
-      <div class="footer__row">
-        <p class="footer__contact">
-          For commissions or inquiries:<br />
-          <a href="mailto:textme.andreaalice@gmail.com">textme.andreaalice@gmail.com</a>
-        </p>
-
-        <!-- Lista social generata da script.js → SOCIAL_LINKS -->
-        <ul class="social" data-social></ul>
-      </div>
+      <!-- Lista social generata da script.js → SOCIAL_LINKS -->
+      <ul class="social" data-social></ul>
 
       <p class="footer__credit">
         © <span data-year>2026</span> Andrea Alice

@@ -33,15 +33,6 @@
   --color-accent-contrast:#1C1B19;   /* charcoal su corallo — contrasto AA */
   --color-focus:          var(--color-teal);
 
-  /* ---- Gradiente hero: bagliore corallo (tramonto) in alto a destra,
-          sfuma nel crema dove sta il testo → charcoal resta leggibile ---- */
-  --gradient-hero:
-    radial-gradient(88% 120% at 88% 10%,
-      rgba(238,126,79,0.55) 0%,
-      rgba(243,199,155,0.42) 28%,
-      rgba(236,229,215,0)   62%),
-    var(--color-cream);
-
   /* ---- Tipografia ---- */
   /* Faricy New (commerciale, moretye) come primaria; fallback grotesque pulito.
      Vedi lo scaffold @font-face più sotto per self-hostarla in ./fonts/. */
@@ -83,6 +74,11 @@
 
   /* ---- Layout / sticky nav ---- */
   --header-h: 3.5rem;
+
+  /* Gradiente di grigio dell'hero — versione in scala di grigi del sunset
+     coral/gold originale (luminanza preservata: 0.299R+0.587G+0.114B su
+     rgb(238,126,79) e rgb(243,199,155)), stessa forma/alpha (0.55 / 0.42). */
+  --gradient-hero: radial-gradient(88% 120% at 88% 10%, rgba(154,154,154,0.55) 0%, rgba(207,207,207,0.42) 28%, rgba(236,229,215,0) 62%), var(--color-cream);
 }
 
 /* ---- @font-face — Faricy New -------------------------------------------
@@ -150,11 +146,14 @@ button { font: inherit; cursor: pointer; }
 
 :target { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
 
-/* Freccia angolata ↗ come motivo per i link in uscita (moodboard) */
+/* Freccia angolata ↗ come motivo per i link in uscita (moodboard).
+   Colore agganciato al link stesso (non all'accento corallo): segue lo
+   stesso crema translucido/hover del testo invece di spiccare arancione
+   fisso sullo sfondo scuro del footer. */
 .social a::after {
   content: " \2197";   /* ↗ */
   font-style: normal;
-  color: var(--color-accent);
+  color: inherit;
 }
 
 /* Link di rientro (pagine release, Bio) — nessuna freccia, è navigazione interna */
@@ -258,6 +257,21 @@ button { font: inherit; cursor: pointer; }
   background: var(--gradient-hero);
   border-bottom: var(--border-width) solid var(--color-border);
 }
+/* Oscilloscopio in alto a dx — una linea che si muove come il playhead di un
+   sequencer/DAW. Canvas 2D, disegna un solo frame statico con
+   prefers-reduced-motion. */
+.hero__scope {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  z-index: 1;
+  width: 220px;
+  height: 90px;
+  opacity: 0.85;
+}
+@media (max-width: 640px) {
+  .hero__scope { width: 140px; height: 60px; top: var(--space-md); right: var(--space-md); }
+}
 /* Video Remotion (visual-tools/remotion-hero/): canale alpha, si compone
    sopra il gradiente sunset senza sostituirlo. Assente finché non viene
    renderizzato e copiato qui — l'hero regge già solo col gradiente CSS. */
@@ -295,62 +309,7 @@ button { font: inherit; cursor: pointer; }
    corallo, poi torna al valore originale (il messaggio resta leggibile).
    Puramente decorativo; logica in initBinaryTagline(), salta con reduced-motion. */
 .hero__tagline .bit { transition: color var(--transition-med); }
-.hero__tagline .bit--flip { color: var(--color-coral); }
-
-/* Pulviscolo CSS: movimento leggero nell'hero finché il video Remotion non
-   è renderizzato — stessa palette/logica del tool (corallo/oro/magenta,
-   deriva lenta, loop). Zero dipendenze, coerente col resto del sito. */
-.hero__motes { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-.hero__mote {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(1px);
-  animation-name: hero-drift;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-.hero__mote--1 {
-  top: 18%; right: 24%; width: 10px; height: 10px;
-  background: radial-gradient(circle, var(--color-coral) 0%, transparent 72%);
-  opacity: 0.5;
-  animation-duration: 19s;
-}
-.hero__mote--2 {
-  top: 36%; right: 13%; width: 7px; height: 7px;
-  background: radial-gradient(circle, var(--color-gold) 0%, transparent 72%);
-  opacity: 0.45;
-  animation-duration: 24s;
-  animation-delay: -6s;
-}
-.hero__mote--3 {
-  top: 9%; right: 36%; width: 6px; height: 6px;
-  background: radial-gradient(circle, var(--color-magenta) 0%, transparent 72%);
-  opacity: 0.4;
-  animation-duration: 27s;
-  animation-delay: -12s;
-}
-@keyframes hero-drift {
-  0%, 100% { transform: translate(0, 0); }
-  50%      { transform: translate(-14px, 18px); }
-}
-
-/* Gatto ASCII: texture decorativa, come "sole" nel bagliore in alto a destra */
-.ascii-cat {
-  position: absolute;
-  z-index: 1;
-  top: 8%;
-  right: clamp(0.5rem, 4vw, 4rem);
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: clamp(1.8rem, 6.5vw, 4rem);
-  line-height: 1.15;
-  color: var(--color-magenta);
-  opacity: 0.3;
-  white-space: pre;
-  pointer-events: none;
-  user-select: none;
-}
-@media (max-width: 480px) { .ascii-cat { opacity: 0.2; } }
+.hero__tagline .bit--flip { color: var(--color-ink); }
 
 /* =============================== SECTIONS =============================== */
 .section { padding-block: var(--space-2xl); border-bottom: var(--border-width) solid var(--color-border); }
@@ -646,11 +605,26 @@ button { font: inherit; cursor: pointer; }
   color: var(--color-cream);
 }
 .site-footer .section__title { color: var(--color-cream); }
+.footer__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  margin-block: var(--space-lg);
+}
+.footer__contact {
+  color: color-mix(in srgb, var(--color-cream) 72%, transparent);
+  font-size: var(--fs-small);
+  line-height: var(--line-body);
+}
+.footer__contact a { color: var(--color-cream); }
+.footer__contact a:hover { color: var(--color-accent); }
 .social {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: var(--space-lg);
-  margin-block: var(--space-lg);
   font-size: var(--fs-small);
 }
 .social a { color: color-mix(in srgb, var(--color-cream) 72%, transparent); transition: color var(--transition-fast); }
@@ -668,6 +642,5 @@ button { font: inherit; cursor: pointer; }
   /* Video hero è decorativo (audio-reattivo, loop continuo): il gradiente
      CSS sottostante basta da solo, niente da mostrare in sua vece. */
   .hero__bg-video { display: none; }
-  .hero__mote { animation: none; }
   .hero__title, .hero__tagline { animation: none; opacity: 1; transform: none; }
 }

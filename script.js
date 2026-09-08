@@ -69,7 +69,6 @@ const SOCIAL_LINKS = [
   { label: 'YouTube — Andrea Alice', url: 'https://youtube.com/channel/UCuNsu0rOt52K-yzCKN9g3PQ' },
   { label: 'YouTube — Policrom',     url: 'https://youtube.com/@policrom_4192' },
   { label: 'Instagram', url: 'https://instagram.com/andrea___alice' },
-  { label: 'Email',     url: 'mailto:textme.andreaalice@gmail.com' },
 ];
 
 /* ====================================================================
@@ -79,8 +78,8 @@ const SOCIAL_LINKS = [
 document.addEventListener('DOMContentLoaded', () => {
   initYear();
   initNavToggle();
-  initAsciiCat();
   initBinaryTagline();
+  initHeroScope();
   initRadio();
   initMusic();
   initGallery();
@@ -109,27 +108,6 @@ function initNavToggle() {
   toggle.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
   menu.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
-}
-
-/* ==================== HERO — gatto ASCII animato ==================== */
-/* Blink occasionale del gatto ASCII nell'hero (decorativo, aria-hidden):
-   ogni 3–7s chiude gli occhi per un istante. Rispetta prefers-reduced-motion:
-   se l'utente riduce le animazioni, il gatto resta immobile. */
-function initAsciiCat() {
-  const cat = document.querySelector('.ascii-cat');
-  if (!cat) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const open  = '   /\\_/\\\n  ( o.o )\n   > ^ <';
-  const blink = '   /\\_/\\\n  ( -.- )\n   > ^ <';
-
-  const scheduleBlink = () => {
-    setTimeout(() => {
-      cat.textContent = blink;
-      setTimeout(() => { cat.textContent = open; scheduleBlink(); }, 140);
-    }, 3000 + Math.random() * 4000);
-  };
-  scheduleBlink();
 }
 
 /* ==================== HERO — tagline binaria "viva" ==================== */
@@ -173,6 +151,57 @@ function initBinaryTagline() {
     setTimeout(() => { flipOne(); flipOne(); loop(); }, 600 + Math.random() * 900);
   };
   loop();
+}
+
+/* ==================== HERO — oscilloscopio in alto a dx ==================== */
+/* Canvas 2D: una linea sinusoidale che scandisce continuamente, come il
+   playhead/scope di un sequencer. dpr-aware, rispetta prefers-reduced-motion
+   disegnando un solo frame statico. */
+function initHeroScope() {
+  const canvas = document.querySelector('.hero__scope');
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  let w = 0, h = 0;
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect();
+    w = rect.width;
+    h = rect.height;
+    canvas.width = Math.max(1, Math.round(w * dpr));
+    canvas.height = Math.max(1, Math.round(h * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  resize();
+  window.addEventListener('resize', resize);
+
+  const draw = (phase) => {
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = '#1C1B19';
+    ctx.lineWidth = 1.25;
+    ctx.beginPath();
+    const steps = 90;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const x = t * w;
+      const y = h / 2 + Math.sin(t * 14 + phase) * (h * 0.34) * Math.sin(t * Math.PI);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  };
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    draw(0);
+    return;
+  }
+
+  let phase = 0;
+  const loop = () => {
+    phase += 0.045;
+    draw(phase);
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
 }
 
 /* ==================== RADIO (Music for Thinking) ==================== */
