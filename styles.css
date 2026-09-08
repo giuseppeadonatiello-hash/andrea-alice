@@ -478,6 +478,13 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: -0.02em;
 }
 
+/* Player Spotify a fondo pagina (sostituisce il pulsante "Listen on Spotify"
+   nell'hero): più grande, con tracklist visibile. */
+.release-embed {
+  margin-top: var(--space-2xl);
+}
+.release-embed iframe { display: block; width: 100%; }
+
 /* Bottone primario riutilizzabile (freccia ↗ = link in uscita, come da moodboard) */
 .btn {
   display: inline-flex;
