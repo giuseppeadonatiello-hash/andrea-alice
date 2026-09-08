@@ -371,10 +371,10 @@ button { font: inherit; cursor: pointer; }
 .release-grid {
   display: grid;
   gap: var(--space-lg) var(--space-md);
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-@media (min-width: 640px) { .release-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 900px) { .release-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 640px) { .release-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .release-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 .release__card { display: block; }
 .release__cover {
@@ -392,7 +392,7 @@ button { font: inherit; cursor: pointer; }
   transform: translateY(-3px);
   box-shadow: 0 10px 24px rgba(28, 27, 25, 0.12);
 }
-.release__title { margin-top: var(--space-sm); font-weight: var(--font-weight-bold); line-height: 1.2; }
+.release__title { margin-top: var(--space-sm); font-weight: var(--font-weight-bold); line-height: 1.2; overflow-wrap: break-word; }
 .release__meta { margin-top: var(--space-2xs); color: var(--color-text-muted); font-size: var(--fs-small); font-family: var(--font-mono); }
 
 /* ===================== RELEASE DETAIL (pagina singola) ===================== */
