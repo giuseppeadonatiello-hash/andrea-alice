@@ -1,7 +1,7 @@
 # Handoff — Sito Andrea Alice
 
-> Stato al 2026-09-09, allineato a `origin/main` (commit **f372846**, 8
-> settembre 2026). Unico handoff valido per il progetto.
+> Stato al 2026-10-02: hero con la composizione "24 minutes" (vedi "Hero").
+> Unico handoff valido per il progetto.
 
 ## Percorso canonico
 
@@ -15,9 +15,14 @@ romperebbero Obsidian — vedi `MEMORY.md`). Repo git locale, branch `main`,
 
 **Deploy**: sito online su **andreaalice.net**, servito via **Cloudflare
 Workers** (config in `wrangler.jsonc`, `assets.directory: "./"`) — dietro
-Cloudflare proxy/CDN. Il deploy avviene da questo repo GitHub; non è chiaro se
-via CI automatica o `wrangler deploy` manuale — verificare prima di assumere
-che un push a `main` pubblichi da solo.
+Cloudflare proxy/CDN. **Un push a `main` pubblica da solo**: l'integrazione Git
+di Cloudflare (*Workers Builds: andrea-alice*) è collegata al repo GitHub e
+compare come check sui commit (verificato il 2026-10-02 su `d6d1a35`, esito
+`success`). Nessuna GitHub Action e nessun webhook nel repo: non serve
+`wrangler deploy` a mano. Quindi **ogni push è un rilascio in produzione**;
+per provare senza pubblicare, lavorare su un branch (Cloudflare costruisce
+anche quelli, ma sul dominio resta `main`) o in locale con
+`python3 -m http.server`.
 
 **Nota storica**: per un periodo (agosto→inizio settembre 2026) il lavoro è
 stato fatto in parallelo su questa macchina e su un Mac mini, senza un remote
@@ -37,7 +42,7 @@ JS, nessun build step, nessuna dipendenza runtime.
 
 ## File
 
-- `index.html` — single-page: header/nav, hero (con oscilloscopio canvas,
+- `index.html` — single-page: header/nav, hero (con composizione canvas,
   vedi sotto), `#music` (discografia), footer/`#contact`. Nessuna sezione
   radio nel markup (vedi "Radio", sotto).
 - `bio.html` — pagina statica separata. Testo bio reale a sinistra, foto
@@ -58,7 +63,7 @@ JS, nessun build step, nessuna dipendenza runtime.
 - `_archive/music-for-thinking-section.html` — markup della sezione radio
   rimossa, con istruzioni di riattivazione (vedi "Radio").
 - `drafts/index-hero-gattino-bozza.html` — bozza di una hero con motivo
-  "gattino", non in uso (l'hero attuale ha l'oscilloscopio canvas, non un
+  "gattino", non in uso (l'hero attuale ha la composizione canvas, non un
   gatto ASCII). Verificare con l'utente se è ancora un'ipotesi aperta o
   scartata prima di toccarla.
 - `media/bio/` — foto reale della bio (self-hosted).
@@ -135,14 +140,26 @@ Griglia di **copertine** (`.release-grid`, `.release__card`,
 `.release__cover`), lift al hover; l'intera card linka la pagina di
 dettaglio, dove sta il pulsante *Listen on Spotify* e l'embed Spotify.
 
-## Hero (redesign 2026-09-08)
+## Hero (composizione "24 minutes", 2026-10-02)
 
-L'hero **non usa più il gatto ASCII**: al suo posto un
-**oscilloscopio canvas** (`<canvas class="hero__scope">`, disegnato da
-`initHeroScope()` in `script.js` — linea sinusoidale animata, dpr-aware,
-rispetta `prefers-reduced-motion` disegnando un frame statico). Il gradiente
-di sfondo è ora grigio/neutro (non più corallo/sunset — vedi
-`--gradient-hero` in `styles.css`). Il `<video class="hero__bg-video">` per
+L'hero **non usa più il gatto ASCII né l'oscilloscopio**: al suo posto una
+**composizione isometrica** (`<canvas class="hero__collage">`, disegnata da
+`initHeroScope()` in `script.js`, nome storico) che riprende le grafiche del
+disco *24 minutes*. Sfaccettature (rombo, facce sx/dx, lastre verticali)
+ritagliate da 20 foto d'angolo (`media/hero/p01–p20.jpg`, da `IMG_7571–7590`
+della cartella "Grafiche disco 24 minutes" sul Desktop) più pannelli-terminale
+(`media/hero/t1–t4.jpg`, dai `lamenti/`). Layout **deterministico** (PRNG con
+seed 24 in `layout()`: 38 pannelli desktop / 26 mobile, terminali a `i % 5 === 2`
+più 3 extra in alto), deriva lenta di ogni pannello, dpr-aware, un frame
+statico con `prefers-reduced-motion`. Su desktop copre il 54% di destra,
+mascherato a sinistra e in basso; sotto i 768px diventa una fascia alta 64vw
+sopra il titolo. ⚠️ Il canvas ha un aspect-ratio intrinseco: `height: 100%`
+in CSS è necessario, `bottom: 0` da solo non basta. Cambiare un seed o un
+numero rimescola tutto: il layout è fragile per costruzione. In `p16.jpg` c'è
+una copia di `p06.jpg` (sostituisce IMG_7586, scelta dell'utente). Scartate
+dall'utente: griglia con jitter, cascata diagonale, monolite compatto.
+Il gradiente di sfondo è grigio/neutro (vedi `--gradient-hero` in
+`styles.css`). Il `<video class="hero__bg-video">` per
 il visual Remotion resta agganciato ma inerte finché `hero-visual.webm` non
 esiste (vedi "Visual audio-reattivo"). C'è una bozza scartata/in sospeso di
 hero alternativa con motivo "gattino" in
@@ -198,7 +215,7 @@ markup) — riattivare vuol dire solo rimettere l'HTML.
 `visual-tools/remotion-hero/`: scaffold pronto, composizione placeholder
 generativa. `index.html`/`styles.css` hanno già `<video class="hero__bg-video">`
 che punta a `hero-visual.webm`: finché il file non è renderizzato e copiato
-nella root, l'hero mostra solo il gradiente CSS + l'oscilloscopio — niente si
+nella root, l'hero mostra solo il gradiente CSS + la composizione canvas — niente si
 rompe (unico 404 in console: `hero-visual.webm`, atteso). **Per riprendere**:
 mettere una traccia audio in `visual-tools/remotion-hero/public/track.mp3` e
 seguire il commento "SWAP AUDIO-REATTIVO" in `src/HeroVisual.tsx`, poi
