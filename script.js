@@ -111,11 +111,10 @@ function initNavToggle() {
 }
 
 /* ==================== HERO — tagline binaria "viva" ==================== */
-/* Ogni ~0,6–1,5s un paio di cifre casuali cambiano valore (0↔1) con un lampo
-   corallo per ~450ms, poi tornano all'originale: i numeri "si muovono" in modo
-   percepibile ma il messaggio ("music for thinking") resta intatto. Ogni cifra
-   è avvolta in uno <span> .bit; gli spazi restano testo. Rispetta
-   prefers-reduced-motion. */
+/* La tagline è "music for thinking" in binario ASCII: ogni 5 s i bit
+   mutano deterministicamente verso "music for dreaming" e viceversa (vedi
+   sotto). Ogni cifra è avvolta in uno <span> .bit; gli spazi restano testo.
+   Rispetta prefers-reduced-motion (resta statica). */
 function initBinaryTagline() {
   const el = document.querySelector('.hero__tagline');
   if (!el) return;
@@ -138,19 +137,38 @@ function initBinaryTagline() {
   if (!bits.length) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const flipOne = () => {
-    const s = bits[Math.floor(Math.random() * bits.length)];
-    if (s.classList.contains('bit--flip')) return; // già in transito: salta
-    const orig = s.textContent;
-    s.textContent = orig === '0' ? '1' : '0';
-    s.classList.add('bit--flip');
-    setTimeout(() => { s.textContent = orig; s.classList.remove('bit--flip'); }, 450);
+  // Il messaggio alterna ogni 5 s tra "music for thinking" e "music for dreaming".
+  // Mutazione deterministica: i bit che differiscono cambiano uno alla volta,
+  // da sinistra a destra, con il lampo ink; poi il testo resta fermo fino al
+  // cambio successivo. Le due parole hanno la stessa lunghezza (8 caratteri).
+  const MESSAGES = ['music for thinking', 'music for dreaming'];
+  const HOLD_MS = 5000;   // distanza tra un cambio e il successivo
+  const STEP_MS = 90;     // un bit ogni STEP_MS durante la mutazione
+  const toBits = (str) => [...str].map((c) => c.charCodeAt(0).toString(2).padStart(8, '0')).join('');
+  const targets = MESSAGES.map(toBits);
+  if (targets.some((t) => t.length !== bits.length)) return;   // markup non allineato: lascia statico
+
+  let current = 0;
+  const setLabel = () => el.setAttribute('aria-label', MESSAGES[current]);
+  setLabel();
+
+  const mutateTo = (next) => {
+    const from = targets[current], to = targets[next];
+    let step = 0;
+    for (let i = 0; i < bits.length; i++) {
+      if (from[i] === to[i]) continue;
+      const s = bits[i];
+      setTimeout(() => {
+        s.textContent = to[i];
+        s.classList.add('bit--flip');
+        setTimeout(() => s.classList.remove('bit--flip'), 450);
+      }, step++ * STEP_MS);
+    }
+    current = next;
+    setLabel();
   };
 
-  const loop = () => {
-    setTimeout(() => { flipOne(); flipOne(); loop(); }, 600 + Math.random() * 900);
-  };
-  loop();
+  setInterval(() => mutateTo(1 - current), HOLD_MS);
 }
 
 /* ==================== HERO — composizione "24 minutes" ==================== */
