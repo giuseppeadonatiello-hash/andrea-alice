@@ -285,7 +285,8 @@ button { font: inherit; cursor: pointer; }
     -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
             mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
   }
-  .hero__inner { padding-block: var(--space-md) var(--space-xl); }
+  /* .hero davanti: la regola base di .hero__inner viene dopo e vincerebbe */
+  .hero .hero__inner { padding-block: var(--space-md) var(--space-xl); }
 }
 /* Video Remotion (visual-tools/remotion-hero/): canale alpha, si compone
    sopra il gradiente sunset senza sostituirlo. Assente finché non viene
