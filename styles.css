@@ -257,20 +257,35 @@ button { font: inherit; cursor: pointer; }
   background: var(--gradient-hero);
   border-bottom: var(--border-width) solid var(--color-border);
 }
-/* Oscilloscopio in alto a dx — una linea che si muove come il playhead di un
-   sequencer/DAW. Canvas 2D, disegna un solo frame statico con
-   prefers-reduced-motion. */
-.hero__scope {
+/* Composizione "24 minutes": sfaccettature isometriche dalle foto della
+   cover, solo metà dx su desktop (sfumata a sinistra); su mobile diventa una
+   fascia sopra il titolo. Canvas 2D (initHeroScope). */
+.hero__collage {
   position: absolute;
-  top: var(--space-lg);
-  right: var(--space-lg);
-  z-index: 1;
-  width: 220px;
-  height: 90px;
-  opacity: 0.85;
+  top: 0; right: 0; bottom: 0;
+  width: 54%;
+  height: 100%;   /* canvas con aspect-ratio intrinseco: bottom:0 da solo non basta */
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 900ms ease;
+  pointer-events: none;
+  /* sfumata a sinistra e in basso (angolo dx incluso): niente stacco netto */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 28%), linear-gradient(to bottom, #000 70%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, #000 28%), linear-gradient(to bottom, #000 70%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
 }
-@media (max-width: 640px) {
-  .hero__scope { width: 140px; height: 60px; top: var(--space-md); right: var(--space-md); }
+.hero__collage.is-ready { opacity: 1; }
+@media (max-width: 767px) {
+  .hero { flex-direction: column; align-items: stretch; }
+  .hero__collage {
+    position: relative;
+    width: 100%;
+    height: 64vw;
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  }
+  .hero__inner { padding-block: var(--space-md) var(--space-xl); }
 }
 /* Video Remotion (visual-tools/remotion-hero/): canale alpha, si compone
    sopra il gradiente sunset senza sostituirlo. Assente finché non viene

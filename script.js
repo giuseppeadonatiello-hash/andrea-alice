@@ -153,55 +153,127 @@ function initBinaryTagline() {
   loop();
 }
 
-/* ==================== HERO — oscilloscopio in alto a dx ==================== */
-/* Canvas 2D: una linea sinusoidale che scandisce continuamente, come il
-   playhead/scope di un sequencer. dpr-aware, rispetta prefers-reduced-motion
-   disegnando un solo frame statico. */
+/* ==================== HERO — composizione "24 minutes" ==================== */
+/* Canvas 2D: sfaccettature isometriche ritagliate dalle foto d'angolo della
+   cover di 24 minutes (media/hero/p*.jpg) e pannelli-terminale (t*.jpg).
+   Layout deterministico (PRNG con seed), deriva lenta di ogni pannello lungo
+   il proprio asse. dpr-aware; con prefers-reduced-motion disegna un frame. */
 function initHeroScope() {
-  const canvas = document.querySelector('.hero__scope');
+  const canvas = document.querySelector('.hero__collage');
   if (!canvas || !canvas.getContext) return;
   const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const PHOTOS = 20, TERMS = 4;
 
-  let w = 0, h = 0;
+  // Matrici [a,b,c,d]: top (rombo), left, right, flat (lastra verticale)
+  const FACES = {
+    top:   [0.866, 0.5, -0.866, 0.5],
+    left:  [0.866, 0.5, 0, 1],
+    right: [0.866, -0.5, 0, 1],
+    flat:  [1, 0, 0, 1],
+  };
+  const FACE_KEYS = ['top', 'left', 'right', 'flat', 'left', 'right'];
+
+  let seed = 24;
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+
+  const load = (src) => new Promise((res) => {
+    const im = new Image();
+    im.onload = () => res(im);
+    im.onerror = () => res(null);
+    im.src = src;
+  });
+  const imgs = [];
+  for (let i = 1; i <= PHOTOS; i++) imgs.push(load('media/hero/p' + String(i).padStart(2, '0') + '.jpg'));
+  const terms = [];
+  for (let i = 1; i <= TERMS; i++) terms.push(load('media/hero/t' + i + '.jpg'));
+
+  let w = 0, h = 0, panels = [];
+
+  const layout = () => {
+    seed = 24;
+    const unit = Math.max(w, h) / 6;          // taglia base dei pannelli
+    const N = w < 500 ? 26 : 38;
+    panels = [];
+    for (let i = 0; i < N; i++) {
+      const isTerm = i % 5 === 2;
+      const face = FACE_KEYS[Math.floor(rnd() * FACE_KEYS.length)];
+      const pw = unit * (0.7 + rnd() * 1.5);
+      const ph = unit * (face === 'flat' ? 0.9 + rnd() * 1.8 : 0.6 + rnd() * 1.2);
+      panels.push({
+        isTerm, face,
+        src: Math.floor(rnd() * (isTerm ? TERMS : PHOTOS)),
+        x: rnd() * w * 1.1 - w * 0.05,
+        y: rnd() * h * 1.1 - h * 0.05,
+        pw, ph,
+        cx: rnd(), cy: rnd(), cs: 0.45 + rnd() * 0.5,   // ritaglio dentro la sorgente
+        amp: unit * (0.04 + rnd() * 0.09),
+        ph0: rnd() * Math.PI * 2,
+        spd: 0.00018 + rnd() * 0.00022,
+        z: rnd(),
+      });
+    }
+    // terminali extra in alto (dopo il ciclo principale: il resto del layout non cambia)
+    const TOP = w < 500 ? 2 : 3;
+    for (let k = 0; k < TOP; k++) {
+      const face = k % 2 ? 'right' : 'left';
+      const pw = unit * (1.1 + rnd() * 0.4);
+      panels.push({
+        isTerm: true, face,
+        src: (k + 1) % TERMS,
+        x: w * (0.3 + 0.6 * (k + rnd() * 0.6) / TOP) - pw * 0.4,
+        y: -unit * 0.1 + rnd() * h * 0.18,
+        pw, ph: pw * 0.62,
+        cx: 0, cy: 0, cs: 1,
+        amp: unit * (0.04 + rnd() * 0.06),
+        ph0: rnd() * Math.PI * 2,
+        spd: 0.00018 + rnd() * 0.00022,
+        z: 0.55 + rnd() * 0.4,
+      });
+    }
+    // terminali un po' più indietro nella pila
+    panels.sort((p, q) => (p.z - (p.isTerm ? 0.35 : 0)) - (q.z - (q.isTerm ? 0.35 : 0)));
+  };
+
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
-    w = rect.width;
-    h = rect.height;
+    w = rect.width; h = rect.height;
     canvas.width = Math.max(1, Math.round(w * dpr));
     canvas.height = Math.max(1, Math.round(h * dpr));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    layout();
   };
-  resize();
-  window.addEventListener('resize', resize);
 
-  const draw = (phase) => {
+  let loaded = null;
+  const draw = (t) => {
     ctx.clearRect(0, 0, w, h);
-    ctx.strokeStyle = '#1C1B19';
-    ctx.lineWidth = 1.25;
-    ctx.beginPath();
-    const steps = 90;
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const x = t * w;
-      const y = h / 2 + Math.sin(t * 14 + phase) * (h * 0.34) * Math.sin(t * Math.PI);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    if (!loaded) return;
+    for (const p of panels) {
+      const im = (p.isTerm ? loaded.terms : loaded.photos)[p.src];
+      if (!im) continue;
+      const m = FACES[p.face];
+      const d = Math.sin(t * p.spd + p.ph0) * p.amp;
+      // deriva lungo l'asse "lungo" della faccia
+      const dx = m[0] * d, dy = m[1] * d;
+      const sw = im.naturalWidth * p.cs, sh = im.naturalHeight * p.cs * (p.ph / p.pw);
+      const sx = (im.naturalWidth - sw) * p.cx, sy = Math.max(0, (im.naturalHeight - sh)) * p.cy;
+      ctx.save();
+      ctx.transform(m[0], m[1], m[2], m[3], p.x + dx, p.y + dy);
+      ctx.drawImage(im, sx, sy, sw, Math.min(sh, im.naturalHeight - sy), 0, 0, p.pw, p.ph);
+      ctx.restore();
     }
-    ctx.stroke();
   };
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    draw(0);
-    return;
-  }
+  resize();
+  window.addEventListener('resize', () => { resize(); draw(performance.now()); });
 
-  let phase = 0;
-  const loop = () => {
-    phase += 0.045;
-    draw(phase);
+  Promise.all([Promise.all(imgs), Promise.all(terms)]).then(([photos, tm]) => {
+    loaded = { photos, terms: tm };
+    canvas.classList.add('is-ready');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { draw(0); return; }
+    const loop = (t) => { draw(t); requestAnimationFrame(loop); };
     requestAnimationFrame(loop);
-  };
-  requestAnimationFrame(loop);
+  });
 }
 
 /* ==================== RADIO (Music for Thinking) ==================== */
