@@ -51,6 +51,7 @@ const RADIO_CONFIG = {
 // interamente nell'album ARTISAN (2023) non sono elencati a parte.
 const COVER_BASE = 'https://i.scdn.co/image/ab67616d0000b273';
 const RELEASES = [
+  { title: 'Twentyfour Minutes of In-Between Space', year: 'TBA', note: 'Album', slug: 'twentyfour-minutes-of-in-between-space', coverSrc: 'media/twentyfour-minutes/cover-640.jpg' },
   { title: 'Voodoo (feat. Andrea Alice)', year: '2025', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8', slug: 'voodoo', cover: 'd577a038f8be50bad953132a' },
   { title: 'Nuova Memoria Vol. 1', year: '2024', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW', slug: 'nuova-memoria-vol-1', cover: '850bc04a8da20f3ed8383b5c' },
   { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk', slug: 'artisan', cover: '44d9faabc84d2f1aea8ad84d' },
@@ -177,7 +178,12 @@ function initBinaryTagline() {
    Layout deterministico (PRNG con seed), deriva lenta di ogni pannello lungo
    il proprio asse. dpr-aware; con prefers-reduced-motion disegna un frame. */
 function initHeroScope() {
-  const canvas = document.querySelector('.hero__collage');
+  document.querySelectorAll('.hero__collage').forEach((canvas) => {
+    initIsoScope(canvas, Number(canvas.dataset.seed) || 24, Number(canvas.dataset.density) || 1);
+  });
+}
+
+function initIsoScope(canvas, SEED, DENSITY) {
   if (!canvas || !canvas.getContext) return;
   const ctx = canvas.getContext('2d');
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -192,7 +198,7 @@ function initHeroScope() {
   };
   const FACE_KEYS = ['top', 'left', 'right', 'flat', 'left', 'right'];
 
-  let seed = 24;
+  let seed = SEED;
   const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
 
   const load = (src) => new Promise((res) => {
@@ -209,9 +215,9 @@ function initHeroScope() {
   let w = 0, h = 0, panels = [];
 
   const layout = () => {
-    seed = 24;
+    seed = SEED;
     const unit = Math.max(w, h) / 6;          // taglia base dei pannelli
-    const N = w < 500 ? 26 : 38;
+    const N = Math.round((w < 500 ? 26 : 38) * DENSITY);
     panels = [];
     for (let i = 0; i < N; i++) {
       const isTerm = i % 5 === 2;
@@ -289,8 +295,17 @@ function initHeroScope() {
     loaded = { photos, terms: tm };
     canvas.classList.add('is-ready');
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { draw(0); return; }
-    const loop = (t) => { draw(t); requestAnimationFrame(loop); };
-    requestAnimationFrame(loop);
+    // anima solo mentre il canvas è visibile (ce n'è più d'uno nella pagina)
+    let visible = true, running = false;
+    const loop = (t) => {
+      if (!visible) { running = false; return; }
+      draw(t); requestAnimationFrame(loop);
+    };
+    const start = () => { if (!running) { running = true; requestAnimationFrame(loop); } };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(canvas);
+    }
+    start();
   });
 }
 
@@ -398,7 +413,7 @@ function initMusic() {
 
     const cover = document.createElement('img');
     cover.className = 'release__cover';
-    cover.src = COVER_BASE + rel.cover;
+    cover.src = rel.coverSrc || COVER_BASE + rel.cover;
     cover.alt = `${rel.title} — copertina`;
     cover.loading = 'lazy';
     cover.width = 640;
