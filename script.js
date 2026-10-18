@@ -51,7 +51,7 @@ const RADIO_CONFIG = {
 // interamente nell'album ARTISAN (2023) non sono elencati a parte.
 const COVER_BASE = 'https://i.scdn.co/image/ab67616d0000b273';
 const RELEASES = [
-  { title: 'Twentyfour Minutes of In-Between Space', year: 'TBA', note: 'Album', slug: 'twentyfour-minutes-of-in-between-space', coverSrc: 'media/twentyfour-minutes/cover-640.jpg' },
+  { title: 'Twentyfour Minutes of In-Between Space', year: 'Out Nov 6, 2026', note: 'Album', slug: 'twentyfour-minutes-of-in-between-space', coverSrc: 'media/twentyfour-minutes/cover-640.jpg' },
   { title: 'Voodoo (feat. Andrea Alice)', year: '2025', note: 'Collaboration', url: 'https://open.spotify.com/album/6zd95uP1AtqUvvsceOlYA8', slug: 'voodoo', cover: 'd577a038f8be50bad953132a' },
   { title: 'Nuova Memoria Vol. 1', year: '2024', note: 'Compilation', url: 'https://open.spotify.com/album/0HP8JWkUbsLkEUZ2X5ulSW', slug: 'nuova-memoria-vol-1', cover: '850bc04a8da20f3ed8383b5c' },
   { title: 'ARTISAN', year: '2023', note: 'Album', url: 'https://open.spotify.com/album/1jzjdoT0qMEfq9sxwnlZGk', slug: 'artisan', cover: '44d9faabc84d2f1aea8ad84d' },

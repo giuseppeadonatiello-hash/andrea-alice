@@ -340,6 +340,42 @@ button { font: inherit; cursor: pointer; }
 .section__title--sub { font-size: var(--fs-h3); }
 .section__lead { margin-top: var(--space-sm); color: var(--color-text-muted); max-width: var(--measure); }
 
+/* ========================== PROSSIMA USCITA ========================== */
+.upcoming { padding-block: var(--space-xl); background: var(--color-surface); }
+.upcoming__inner { display: grid; gap: var(--space-lg); align-items: center; }
+@media (min-width: 720px) {
+  .upcoming__inner { grid-template-columns: minmax(0, 12rem) 1fr; gap: var(--space-xl); }
+}
+.upcoming__cover img {
+  display: block;
+  width: 100%;
+  max-width: 12rem;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+}
+.upcoming__info { display: grid; gap: var(--space-sm); justify-items: start; }
+.upcoming__kicker {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.upcoming__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4.5vw, 2.75rem);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.upcoming__title a:hover { color: var(--color-accent); }
+.upcoming__lead { color: var(--color-text-muted); }
+.upcoming .btn { margin-top: var(--space-xs); }
+
 /* ================================ PLAYER ================================ */
 .player {
   background: var(--color-surface);
@@ -511,6 +547,7 @@ button { font: inherit; cursor: pointer; }
 @media (min-width: 900px) { .gallery { grid-template-columns: repeat(4, 1fr); } }
 
 .gallery__item { display: block; }
+.gallery__item--zoom { cursor: zoom-in; }
 .gallery__thumb {
   width: 100%;
   height: auto;
