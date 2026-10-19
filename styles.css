@@ -514,6 +514,8 @@ button { font: inherit; cursor: pointer; }
 /* Blocchi di contenuto (Making of, Gear): ora placeholder, contenuti da fornire */
 .release-block + .release-block { margin-top: var(--space-xl); }
 .release-block .section__title--sub { margin-bottom: var(--space-sm); }
+/* Versione in altra lingua dello stesso testo: filetto di separazione */
+.release-block--translation { padding-top: var(--space-xl); border-top: var(--border-width) solid var(--color-border); }
 .placeholder-note {
   color: var(--color-text-muted);
   font-family: var(--font-mono);
